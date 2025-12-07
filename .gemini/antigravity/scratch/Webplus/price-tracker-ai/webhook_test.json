@@ -1,0 +1,6 @@
+{
+    "type": "payment.succeeded",
+    "data": {
+        "customer_email": "saravanavenkatachalam@gmail.com"
+    }
+}

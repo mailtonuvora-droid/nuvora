@@ -20,16 +20,19 @@ async function createDodoPaymentSession(orderData) {
             product_cart: [
                 {
                     product_id: DODO_CONFIG.productId,
-                    quantity: 1
+                    quantity: 1,
+                    amount: amountInSmallestUnit,        // Try amount inside cart
+                    payment_amount: amountInSmallestUnit // Try payment_amount inside cart
                 }
             ],
-            paymentAmount: amountInSmallestUnit, // Primary for PWYW
-            amount: amountInSmallestUnit,        // Fallback
+            paymentAmount: amountInSmallestUnit, // Keep at top level just in case
+            amount: amountInSmallestUnit,        // Keep at top level just in case
+            total_amount: amountInSmallestUnit,  // Keep at top level just in case
             billing_address: {
                 street: orderData.address || '',
                 city: orderData.city || '',
                 state: orderData.state || '',
-                zipcode: orderData.pincode || '',   // Dodo lowercase
+                zipcode: orderData.pincode || '',   // Dodo's preferred
                 zip_code: orderData.pincode || '',  // Common variation
                 zip: orderData.pincode || '',       // Legacy attempt
                 country: 'IN'

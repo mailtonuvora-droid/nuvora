@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Checkout - Nuvora Premium Organic Superfoods</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Raleway:wght@600;800&display=swap"
+        rel="stylesheet">
+
+    <!-- Icon Font Stylesheet -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="lib/lightbox/css/lightbox.min.css" rel="stylesheet">
+    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <link href="css/style.css" rel="stylesheet">
+
+    <style>
+        /* New Payment Details UI */
+        .payment-details-card {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 25px;
+            border: 1px solid #f0f0f0;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            margin-top: 30px;
+        }
+
+        .payment-title {
+            font-size: 1.2rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            color: #000;
+        }
+
+        .payment-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 1rem;
+            color: #666;
+        }
+
+        .payment-row.payable {
+            border-top: 1px dashed #ddd;
+            padding-top: 15px;
+            margin-top: 15px;
+            color: #000;
+            font-weight: 800;
+            font-size: 1.2rem;
+        }
+
+        .text-discount {
+            color: #0b7a42;
+            font-weight: 700;
+        }
+
+        .fee-free {
+            color: #0b7a42;
+            font-weight: 800;
+            margin-left: 8px;
+        }
+
+        .fee-crossed {
+            text-decoration: line-through;
+            color: #aaa;
+            font-size: 0.9rem;
+            margin-right: 5px;
+        }
+
+        .savings-banner {
+            background: #e7f6ed;
+            color: #0b7a42;
+            padding: 15px 20px;
+            border-radius: 12px;
+            font-weight: 700;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            font-size: 0.95rem;
+        }
+
+        .savings-banner i {
+            font-size: 1.1rem;
+            transition: 0.3s;
+        }
+
+        /* UPI Icons for Button */
+        .btn-checkout-upi {
+            background-color: #0b7a42 !important;
+            color: white !important;
+            border-radius: 18px !important;
+            padding: 18px 25px !important;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: none !important;
+            transition: 0.3s;
+            width: 100%;
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-top: 20px;
+        }
+
+        .btn-checkout-upi:hover {
+            background-color: #096335 !important;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(11, 122, 66, 0.3);
+        }
+
+        .upi-container {
+            display: flex;
+            gap: 2px;
+            background: rgba(255, 255, 255, 1);
+            padding: 4px 10px;
+            border-radius: 30px;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .upi-icon-img {
+            height: 18px;
+            width: auto;
+            margin: 0 3px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Spinner Start -->
+    <div id="spinner"
+        class="show w-100 vh-100 bg-white position-fixed translate-middle top-50 start-50  d-flex align-items-center justify-content-center">
+        <div class="spinner-grow text-primary" role="status"></div>
+    </div>
+    <!-- Spinner End -->
+
+
+    <!-- Navbar start -->
+    <div class="container-fluid fixed-top">
+        <div class="container topbar bg-primary d-none d-lg-block">
+            <div class="d-flex justify-content-between">
+                <div class="top-info ps-2">
+                    <small class="me-3"><i class="fas fa-map-marker-alt me-2 text-secondary"></i> <a href="#"
+                            class="text-white">Sathyamangalam, Erode, TN, India</a></small>
+                    <small class="me-3"><i class="fas fa-envelope me-2 text-secondary"></i><a href="#"
+                            class="text-white">contact@nuvora.in</a></small>
+                </div>
+                <div class="top-link pe-2">
+                    <small class="text-white mx-2"><i class="fas fa-phone-alt me-2 text-secondary"></i>+91
+                        8110001001</small>/
+                    <small class="text-white mx-2"><i class="fas fa-phone-alt me-2 text-secondary"></i>+91
+                        8110001007</small>
+                </div>
+            </div>
+        </div>
+        <div class="container px-0">
+            <nav class="navbar navbar-light bg-white navbar-expand-xl">
+                <a href="index.html" class="navbar-brand">
+                    <img src="img/logo.png" alt="Nuvora" style="max-height: 50px;">
+                </a>
+                <button class="navbar-toggler py-2 px-3" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarCollapse">
+                    <span class="fa fa-bars text-primary"></span>
+                </button>
+                <div class="collapse navbar-collapse bg-white" id="navbarCollapse">
+                    <div class="navbar-nav mx-auto">
+                        <a href="index.html" class="nav-item nav-link">Shop</a>
+                        <!-- <a href="shop.html" class="nav-item nav-link">Shop</a> -->
+                        <a href="checkout.html" class="nav-item nav-link active">Cart / Checkout</a>
+                        <a href="contact.html" class="nav-item nav-link">Contact</a>
+                    </div>
+                    <div class="d-flex m-3 me-0">
+                        <button
+                            class="btn-search btn border border-secondary btn-md-square rounded-circle bg-white me-4"
+                            data-bs-toggle="modal" data-bs-target="#searchModal"><i
+                                class="fas fa-search text-primary"></i></button>
+                        <a href="#" class="position-relative me-4 my-auto">
+                            <i class="fa fa-shopping-bag fa-2x"></i>
+                            <span
+                                class="position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1"
+                                style="top: -5px; left: 15px; height: 20px; min-width: 20px;">3</span>
+                        </a>
+                        <div class="my-auto position-relative" id="user-nav-link">
+                            <a href="#"><i class="fas fa-user fa-2x"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </div>
+    <!-- Navbar End -->
+
+
+    <!-- Modal Search Start -->
+    <div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content rounded-0">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Search by keyword</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body d-flex align-items-center">
+                    <div class="input-group w-75 mx-auto d-flex">
+                        <input type="search" class="form-control p-3" placeholder="keywords"
+                            aria-describedby="search-icon-1">
+                        <span id="search-icon-1" class="input-group-text p-3"><i class="fa fa-search"></i></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal Search End -->
+
+
+    <!-- Single Page Header start -->
+    <div class="container-fluid page-header py-5">
+        <h1 class="text-center text-white display-6">Checkout</h1>
+        <ol class="breadcrumb justify-content-center mb-0">
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item"><a href="#">Pages</a></li>
+            <li class="breadcrumb-item active text-white">Checkout</li>
+        </ol>
+    </div>
+    <!-- Single Page Header End -->
+
+
+    <!-- Checkout Page Start -->
+    <div class="container-fluid py-5">
+        <div class="container py-5">
+            <h1 class="mb-4">Billing details</h1>
+            <form action="#">
+                <div class="row g-5">
+                    <div class="col-md-12 col-lg-6 col-xl-7">
+                        <div class="row">
+                            <div class="col-md-12 col-lg-6">
+                                <div class="form-item w-100">
+                                    <label class="form-label my-3">First Name<sup>*</sup></label>
+                                    <input type="text" id="firstName" class="form-control" required>
+                                </div>
+                            </div>
+                            <div class="col-md-12 col-lg-6">
+                                <div class="form-item w-100">
+                                    <label class="form-label my-3">Last Name<sup>*</sup></label>
+                                    <input type="text" id="lastName" class="form-control" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-item">
+                            <label class="form-label my-3">Address <sup>*</sup></label>
+                            <input type="text" id="address" class="form-control" placeholder="House Number Street Name"
+                                required>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 col-lg-6">
+                                <div class="form-item w-100">
+                                    <label class="form-label my-3">Town/City<sup>*</sup></label>
+                                    <input type="text" id="city" class="form-control" placeholder="Chennai" required>
+                                </div>
+                            </div>
+                            <div class="col-md-12 col-lg-6">
+                                <div class="form-item w-100">
+                                    <label class="form-label my-3">State<sup>*</sup></label>
+                                    <select id="state" class="form-control" required>
+                                        <option value="">Select State</option>
+                                        <option value="Andhra Pradesh">Andhra Pradesh</option>
+                                        <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                                        <option value="Assam">Assam</option>
+                                        <option value="Bihar">Bihar</option>
+                                        <option value="Chhattisgarh">Chhattisgarh</option>
+                                        <option value="Goa">Goa</option>
+                                        <option value="Gujarat">Gujarat</option>
+                                        <option value="Haryana">Haryana</option>
+                                        <option value="Himachal Pradesh">Himachal Pradesh</option>
+                                        <option value="Jharkhand">Jharkhand</option>
+                                        <option value="Karnataka">Karnataka</option>
+                                        <option value="Kerala">Kerala</option>
+                                        <option value="Madhya Pradesh">Madhya Pradesh</option>
+                                        <option value="Maharashtra">Maharashtra</option>
+                                        <option value="Manipur">Manipur</option>
+                                        <option value="Meghalaya">Meghalaya</option>
+                                        <option value="Mizoram">Mizoram</option>
+                                        <option value="Nagaland">Nagaland</option>
+                                        <option value="Odisha">Odisha</option>
+                                        <option value="Punjab">Punjab</option>
+                                        <option value="Rajasthan">Rajasthan</option>
+                                        <option value="Sikkim">Sikkim</option>
+                                        <option value="Tamil Nadu">Tamil Nadu</option>
+                                        <option value="Telangana">Telangana</option>
+                                        <option value="Tripura">Tripura</option>
+                                        <option value="Uttar Pradesh">Uttar Pradesh</option>
+                                        <option value="Uttarakhand">Uttarakhand</option>
+                                        <option value="West Bengal">West Bengal</option>
+                                        <option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
+                                        <option value="Chandigarh">Chandigarh</option>
+                                        <option value="Dadra and Nagar Haveli and Daman and Diu">Dadra and Nagar Haveli
+                                            and Daman and Diu</option>
+                                        <option value="Delhi">Delhi</option>
+                                        <option value="Jammu and Kashmir">Jammu and Kashmir</option>
+                                        <option value="Ladakh">Ladakh</option>
+                                        <option value="Lakshadweep">Lakshadweep</option>
+                                        <option value="Puducherry">Puducherry</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-item">
+                            <label class="form-label my-3">Postcode/Zip/Pincode<sup>*</sup></label>
+                            <input type="text" id="pincode" class="form-control" placeholder="600001" required>
+                        </div>
+                        <div class="form-item">
+                            <label class="form-label my-3">Mobile or Email <sup>*</sup></label>
+                            <input type="text" id="contactInput" class="form-control"
+                                placeholder="Enter Mobile Number or Email Address">
+                        </div>
+                        <div class="form-item">
+                            <textarea id="notes" class="form-control" spellcheck="false" cols="30" rows="11"
+                                placeholder="Order Notes (Optional)"></textarea>
+                        </div>
+                    </div>
+                    <div class="col-md-12 col-lg-6 col-xl-5">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" style="min-width: 100px;">Item</th>
+                                        <th scope="col">Price</th>
+                                        <th scope="col">Qty</th>
+                                        <th scope="col" class="text-end">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="order-summary-body">
+                                    <!-- Dynamic items -->
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- New Payment Details Section -->
+                        <div class="payment-details-card">
+                            <h5 class="payment-title">Payment details</h5>
+
+                            <div class="payment-row">
+                                <span>MRP Total</span>
+                                <span id="payment-mrp-total">₹0.00</span>
+                            </div>
+
+                            <div class="payment-row">
+                                <span>Product Discount</span>
+                                <span class="text-discount" id="payment-product-discount">-₹0.00</span>
+                            </div>
+
+                            <div class="payment-row"
+                                style="border-top: 1px dashed #ddd; padding-top: 10px; margin-top: 5px;">
+                                <span><strong>Subtotal</strong></span>
+                                <span id="payment-subtotal"><strong>₹0.00</strong></span>
+                            </div>
+
+                            <div class="payment-row" id="coupon-row" style="display:none;">
+                                <span>Coupon Discount</span>
+                                <span class="text-discount" id="payment-coupon-discount">-₹0.00</span>
+                            </div>
+
+                            <div class="payment-row" id="gst-row" style="display:none;">
+                                <span>GST</span>
+                                <span id="payment-gst">+₹0.00</span>
+                            </div>
+
+                            <div class="payment-row" id="platform-fee-row" style="display:none;">
+                                <span>Platform Fee</span>
+                                <span id="payment-platform-fee">+₹0.00</span>
+                            </div>
+
+                            <div class="payment-row">
+                                <span>Delivery Fee</span>
+                                <div id="delivery-fee-container">
+                                    <span id="delivery-fee-val" class="fee-crossed">₹50.00</span>
+                                    <span class="fee-free">FREE</span>
+                                </div>
+                            </div>
+
+                            <div class="payment-row payable">
+                                <span>Total Payable</span>
+                                <span id="payment-total-payable">₹0.00</span>
+                            </div>
+                        </div>
+
+                        <!-- Savings Banner -->
+                        <div class="savings-banner" id="savings-banner-box" style="display:none;">
+                            <span>You saved a total of <span id="total-savings-val">₹0.00</span></span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+
+                        <!-- Coupon Input (Redesigned) -->
+                        <div class="mt-4 p-3 bg-light rounded-3 d-flex align-items-center">
+                            <input type="text" id="couponCode" class="form-control border-0 bg-transparent"
+                                placeholder="Enter Coupon Code">
+                            <button class="btn btn-primary btn-sm rounded-pill px-3 ms-2" type="button"
+                                onclick="applyCoupon()">Apply</button>
+                        </div>
+                        <p id="couponMsg" class="small mt-1 px-2"></p>
+
+                        <!-- Payment Method Selection -->
+                        <div class="mt-4 p-4 bg-light rounded-3">
+                            <h6 class="fw-bold mb-3">💳 Select Payment Method</h6>
+                            <div class="form-check mb-3 p-3 border rounded" style="background: white;">
+                                <input class="form-check-input" type="radio" name="paymentMethod" id="paymentCOD"
+                                    value="cod" checked>
+                                <label class="form-check-label w-100" for="paymentCOD" style="cursor: pointer;">
+                                    <div class="d-flex align-items-center">
+                                        <div>
+                                            <strong>💵 Cash on Delivery (COD)</strong>
+                                            <br>
+                                            <small class="text-muted">Pay when you receive your order</small>
+                                        </div>
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="form-check p-3 border rounded" style="background: white;">
+                                <input class="form-check-input" type="radio" name="paymentMethod" id="paymentOnline"
+                                    value="online">
+                                <label class="form-check-label w-100" for="paymentOnline" style="cursor: pointer;">
+                                    <div class="d-flex align-items-center">
+                                        <div>
+                                            <strong>💳 Online Payment</strong>
+                                            <br>
+                                            <small class="text-muted">Pay securely via Dodo Payments (UPI, Cards, Net
+                                                Banking)</small>
+                                        </div>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Final Checkout Button -->
+                        <button type="button" onclick="submitOrder()"
+                            class="btn btn-primary w-100 py-3 rounded-pill text-uppercase fw-bold mt-4">
+                            Place Order
+                        </button>
+                        <p class="text-center text-muted small mt-3">Powered by Nuvora Payments</p>
+                    </div>
+                </div>
+
+                <script>
+                    let shippingCharge = 50;
+                    let discount = 0;
+                    let activeCoupon = null;
+
+                    async function renderOrderSummary() {
+                        const cart = Cart.get();
+                        const body = document.getElementById('order-summary-body');
+                        body.innerHTML = '';
+
+                        if (cart.length === 0) {
+                            body.innerHTML = '<tr><td colspan="4" class="text-center py-5"><h4>No products are added or selected.</h4><a href="shop.html" class="btn btn-primary mt-3">Go to Shop</a></td></tr>';
+                            document.getElementById('payment-total-payable').innerText = '₹0.00';
+                            return;
+                        }
+
+                        // Fetch real shipping charge from settings
+                        try {
+                            const { data: settings } = await window.DB.getSettings();
+                            const shipSetting = settings?.find(s => s.key === 'shipping_charge');
+                            let baseShipping = shipSetting ? parseFloat(shipSetting.value) : 50;
+
+                            // Free Shipping Logic: If EVERY item in cart is marked free_shipping, then 0.
+                            const allFree = cart.length > 0 && cart.every(item => item.free_shipping === true);
+                            shippingCharge = allFree ? 0 : baseShipping;
+                        } catch (e) {
+                            console.error('Settings load error:', e);
+                        }
+
+                        let subtotal = 0;
+                        let mrpTotal = 0;
+                        let totalGST = 0;
+                        let totalPlatformFee = 0;
+
+                        cart.forEach(item => {
+                            const itemPrice = parseFloat(item.price);
+                            const itemOriginalPrice = parseFloat(item.original_price || item.price);
+                            const itemTotal = itemPrice * item.quantity;
+                            const itemMrpTotal = itemOriginalPrice * item.quantity;
+
+                            subtotal += itemTotal;
+                            mrpTotal += itemMrpTotal;
+
+                            // Calculate GST for this item
+                            const gstPercentage = parseFloat(item.gst_percentage || 0);
+                            const itemGST = (itemPrice * item.quantity * gstPercentage) / 100;
+                            totalGST += itemGST;
+
+                            // Calculate platform fee for this item
+                            const platformFee = parseFloat(item.platform_fee || 0);
+                            totalPlatformFee += (platformFee * item.quantity);
+
+                            const row = `
+                            <tr>
+                                <th scope="row">
+                                    <div class="d-flex align-items-center mt-2">
+                                        <img src="${item.img}" class="img-fluid rounded-circle" style="width: 40px; height: 40px; object-fit: cover;" alt="">
+                                        <div class="ms-2">
+                                            <p class="mb-0 small fw-bold">${item.name}</p>
+                                        </div>
+                                    </div>
+                                </th>
+                                <td class="py-5" style="vertical-align: middle;">₹${item.price}</td>
+                                <td class="py-5" style="vertical-align: middle;">${item.quantity}</td>
+                                <td class="py-5 text-end" style="vertical-align: middle;">₹${itemTotal.toFixed(2)}</td>
+                            </tr>`;
+                            body.innerHTML += row;
+                        });
+
+                        // Calculate discount from coupon
+                        if (activeCoupon) {
+                            if (activeCoupon.discount_type === 'percentage') {
+                                discount = subtotal * (activeCoupon.discount_value / 100);
+                            } else {
+                                discount = activeCoupon.discount_value;
+                            }
+                        }
+
+                        // Calculate totals
+                        const productDiscount = mrpTotal - subtotal;
+                        const couponDiscount = discount;
+
+                        // Grand total: subtotal + GST + platform fee + shipping - coupon discount
+                        const total = Math.max(0, subtotal + totalGST + totalPlatformFee + shippingCharge - couponDiscount);
+
+                        // Update UI
+                        document.getElementById('payment-mrp-total').innerText = `₹${mrpTotal.toFixed(2)}`;
+                        document.getElementById('payment-product-discount').innerText = `-₹${productDiscount.toFixed(2)}`;
+                        document.getElementById('payment-subtotal').innerText = `₹${subtotal.toFixed(2)}`;
+
+                        // Show/hide GST row
+                        if (totalGST > 0) {
+                            document.getElementById('gst-row').style.display = 'flex';
+                            document.getElementById('payment-gst').innerText = `+₹${totalGST.toFixed(2)}`;
+                        } else {
+                            document.getElementById('gst-row').style.display = 'none';
+                        }
+
+                        // Show/hide Platform Fee row
+                        if (totalPlatformFee > 0) {
+                            document.getElementById('platform-fee-row').style.display = 'flex';
+                            document.getElementById('payment-platform-fee').innerText = `+₹${totalPlatformFee.toFixed(2)}`;
+                        } else {
+                            document.getElementById('platform-fee-row').style.display = 'none';
+                        }
+
+                        if (activeCoupon) {
+                            document.getElementById('coupon-row').style.display = 'flex';
+                            document.getElementById('payment-coupon-discount').innerText = `-₹${couponDiscount.toFixed(2)}`;
+                        } else {
+                            document.getElementById('coupon-row').style.display = 'none';
+                        }
+
+                        // Update Delivery Fee Display
+                        const feeContainer = document.getElementById('delivery-fee-container');
+                        if (feeContainer) {
+                            if (shippingCharge === 0) {
+                                feeContainer.innerHTML = '<span class="fee-crossed">₹50.00</span> <span class="fee-free">FREE</span>';
+                            } else {
+                                feeContainer.innerHTML = `<span>₹${shippingCharge.toFixed(2)}</span>`;
+                            }
+                        }
+
+                        // Debug logging
+                        console.log('=== Checkout Calculation Debug ===');
+                        console.log('Subtotal:', subtotal);
+                        console.log('Total GST:', totalGST);
+                        console.log('Total Platform Fee:', totalPlatformFee);
+                        console.log('Shipping Charge:', shippingCharge);
+                        console.log('Coupon Discount:', couponDiscount);
+                        console.log('Calculated Total:', total);
+                        console.log('================================');
+
+                        document.getElementById('payment-total-payable').innerText = `₹${total.toFixed(2)}`;
+
+                        // Savings Banner
+                        const totalSaved = productDiscount + couponDiscount + (shippingCharge === 0 ? 50 : 0);
+                        const savingsBanner = document.getElementById('savings-banner-box');
+                        if (totalSaved > 0) {
+                            document.getElementById('total-savings-val').innerText = `₹${totalSaved.toFixed(2)}`;
+                            savingsBanner.style.display = 'flex';
+                        } else {
+                            savingsBanner.style.display = 'none';
+                        }
+                    }
+
+                    window.renderOrderSummary = renderOrderSummary; // Make it global for Cart.js
+
+                    async function applyCoupon() {
+                        const code = document.getElementById('couponCode').value.trim();
+                        const msgEl = document.getElementById('couponMsg');
+                        if (!code) {
+                            activeCoupon = null;
+                            discount = 0;
+                            if (msgEl) msgEl.innerText = '';
+                            renderOrderSummary();
+                            return;
+                        }
+
+                        try {
+                            const { data: coupon, error } = await window.DB.validateCoupon(code);
+                            if (error || !coupon) {
+                                msgEl.className = 'small mt-1 px-2 text-danger';
+                                msgEl.innerText = 'Invalid or expired coupon.';
+                                discount = 0;
+                                activeCoupon = null;
+                            } else {
+                                // Logic: fixed or percentage
+                                // For MVP assuming fixed amount or logic
+                                // Let's simplify: simple fixed discount if 'discount_amount' exists, else 10%
+                                let val = coupon.discount_amount || 0;
+                                // If percentage logic needed, would check type. Assuming mostly flat for now or provided.
+
+                                discount = val;
+                                activeCoupon = coupon;
+                                msgEl.className = 'small mt-1 px-2 text-success';
+                                msgEl.innerText = 'Coupon applied successfully!';
+                            }
+                            renderOrderSummary();
+                        } catch (err) {
+                            console.error(err);
+                            msgEl.className = 'small mt-1 px-2 text-danger';
+                            msgEl.innerText = 'Error applying coupon.';
+                        }
+                    }
+
+                    async function submitOrder() {
+                        const contactInput = document.getElementById('contactInput').value.trim();
+                        const firstName = document.getElementById('firstName').value;
+                        const lastName = document.getElementById('lastName').value;
+                        const address = document.getElementById('address').value;
+                        const city = document.getElementById('city').value;
+                        const state = document.getElementById('state').value;
+                        const pincode = document.getElementById('pincode').value;
+
+                        if (!contactInput) {
+                            alert('Please provide your Mobile Number or Email Address.');
+                            return;
+                        }
+
+                        let email = null;
+                        let mobile = null;
+
+                        // Detection Logic
+                        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                        const isEmail = emailRegex.test(contactInput);
+
+                        // Check if it's mobile (mostly digits, allowing spaces/dashes, min length 10)
+                        const cleanMobile = contactInput.replace(/\D/g, '');
+                        const isMobile = cleanMobile.length >= 10;
+
+                        if (isEmail) {
+                            email = contactInput;
+                        } else if (isMobile) {
+                            mobile = cleanMobile; // Use cleaned number
+                        } else {
+                            alert('Please enter a valid format: \n- Email: name@example.com\n- Mobile: Minimum 10 digits');
+                            return;
+                        }
+
+                        if (!firstName || !address || !city || !state || !pincode) {
+                            alert('Please fill in all shipping details (Name, Address, City, State, Pincode).');
+                            return;
+                        }
+
+                        const cart = Cart.get();
+                        if (cart.length === 0) {
+                            alert('Your cart is empty.');
+                            return;
+                        }
+
+                        try {
+                            if (typeof window.DB === 'undefined') {
+                                throw new Error('Database service (js/database.js) failed to load. Please refresh the page and try again.');
+                            }
+
+                            // 1. Shadow Registration
+                            const { data: user, error: userError } = await window.DB.findOrCreateUser({
+                                email: email,
+                                mobile: mobile,
+                                first_name: firstName,
+                                last_name: lastName
+                            });
+
+                            if (userError) throw userError;
+
+                            // 2. Calculate GST and Platform Fee
+                            let totalGST = 0;
+                            let totalPlatformFee = 0;
+                            cart.forEach(item => {
+                                const itemPrice = parseFloat(item.price);
+                                const gstPercentage = parseFloat(item.gst_percentage || 0);
+                                const platformFee = parseFloat(item.platform_fee || 0);
+
+                                totalGST += (itemPrice * item.quantity * gstPercentage) / 100;
+                                totalPlatformFee += (platformFee * item.quantity);
+                            });
+
+                            // 3. Create Order (Status: pending - COD)
+                            const subtotal = Cart.getTotal();
+                            const finalTotal = Math.max(0, subtotal + totalGST + totalPlatformFee + shippingCharge - discount);
+                            const fullAddress = `${address}, ${city}, ${state} - ${pincode}`;
+
+                            const { data: orderData, error: orderError } = await window.DB.createOrder(
+                                user.id,
+                                cart,
+                                finalTotal,
+                                fullAddress,
+                                totalGST,
+                                totalPlatformFee
+                            );
+
+                            if (orderError) throw orderError;
+
+                            // 3.1 Update User Address (Save for future)
+                            await window.DB.updateUser(user.id, {
+                                address: address,
+                                city: city,
+                                state: state,
+                                pincode: pincode
+                            });
+
+                            // 4. Check Payment Method
+                            const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
+                            console.log('Selected payment method:', paymentMethod);
+
+                            if (paymentMethod === 'online') {
+                                // ONLINE PAYMENT - Redirect to Dodo Payments
+                                console.log('Creating Dodo payment session...');
+
+                                try {
+                                    const paymentSession = await window.DodoPayments.createSession({
+                                        order_id: orderData?.id || 'temp_' + Date.now(),
+                                        total_amount: finalTotal,
+                                        email: email,
+                                        mobile: mobile,
+                                        first_name: firstName,
+                                        last_name: lastName,
+                                        shipping_address: fullAddress,
+                                        items: cart
+                                    });
+
+                                    if (paymentSession && paymentSession.checkout_url) {
+                                        // Store cart and order info for post-payment processing
+                                        sessionStorage.setItem('pending_order', JSON.stringify({
+                                            orderId: orderData?.id,
+                                            cart: cart,
+                                            userId: user.id
+                                        }));
+
+                                        // Redirect to Dodo Payments
+                                        console.log('Redirecting to Dodo Payments...');
+                                        window.location.href = paymentSession.checkout_url;
+                                        return; // Stop execution here
+                                    } else {
+                                        throw new Error('Failed to create payment session - no checkout URL received');
+                                    }
+                                } catch (paymentError) {
+                                    console.error('Payment gateway error:', paymentError);
+                                    alert(`Payment gateway error: ${paymentError.message}\n\nPlease try again or select Cash on Delivery.`);
+                                    return;
+                                }
+                            } else {
+                                // COD - Complete Order Immediately
+                                console.log('Processing COD order...');
+
+                                // Deduct Stock
+                                console.log('Nuvora: Deducting inventory for', cart.length, 'items');
+                                for (const item of cart) {
+                                    await window.DB.decrementProductStock(item.id, item.quantity);
+                                }
+
+                                // Store order info for success page
+                                sessionStorage.setItem('completed_order', JSON.stringify({
+                                    orderId: orderData?.id,
+                                    total: finalTotal,
+                                    paymentMethod: 'COD'
+                                }));
+
+                                // Send Confirmation Email
+                                if (email && window.EmailService) {
+                                    console.log('Sending confirmation email...');
+                                    window.EmailService.sendOrderConfirmation({
+                                        customerName: `${firstName} ${lastName}`,
+                                        email: email,
+                                        orderId: orderData.id,
+                                        total: finalTotal,
+                                        paymentMethod: 'Cash on Delivery (COD)',
+                                        items: cart,
+                                        shippingAddress: fullAddress
+                                    }).then(res => console.log('Email sent:', res));
+                                }
+
+                                // Clear cart and redirect to success page
+                                localStorage.removeItem('nuvora_cart');
+                                window.location.href = `order-success.html?order_id=${orderData?.id}`;
+                            }
+
+                        } catch (err) {
+                            console.error(err);
+                            const errorMessage = err.message || JSON.stringify(err);
+                            alert(`Error submitting order: ${errorMessage}\n\nPlease check console for details.`);
+                        }
+                    }
+
+                    // Initial Render
+                    window.addEventListener('load', () => {
+                        // Pre-fill if logged in
+                        if (window.Auth && window.Auth.user) {
+                            const u = window.Auth.user;
+                            if (u.first_name) document.getElementById('firstName').value = u.first_name;
+                            if (u.last_name) document.getElementById('lastName').value = u.last_name;
+                            // Auto-fill contact (prefer mobile, then email)
+                            if (u.mobile) document.getElementById('contactInput').value = u.mobile;
+                            else if (u.email) document.getElementById('contactInput').value = u.email;
+                        }
+                        renderOrderSummary();
+                    });
+                </script>
+            </form>
+        </div>
+    </div>
+    <!-- Checkout Page End -->
+
+
+    <!-- Footer Start -->
+    <div class="container-fluid bg-dark text-white-50 footer pt-5 mt-5">
+        <div class="container py-5">
+            <div class="pb-4 mb-4" style="border-bottom: 1px solid rgba(226, 175, 24, 0.5) ;">
+                <div class="row g-4">
+                    <div class="col-lg-3">
+                        <a href="#">
+                            <h1 class="text-primary mb-0">Nuvora</h1>
+                            <p class="text-secondary mb-0">Purity You Can Trust</p>
+                        </a>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="position-relative mx-auto">
+                            <input class="form-control border-0 w-100 py-3 px-4 rounded-pill" type="number"
+                                placeholder="Your Email">
+                            <button type="submit"
+                                class="btn btn-primary border-0 border-secondary py-3 px-4 position-absolute rounded-pill text-white"
+                                style="top: 0; right: 0;">Subscribe Now</button>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="d-flex justify-content-end pt-3">
+                            <a class="btn  btn-outline-secondary me-2 btn-md-square rounded-circle" href=""><i
+                                    class="fab fa-twitter"></i></a>
+                            <a class="btn btn-outline-secondary me-2 btn-md-square rounded-circle" href=""><i
+                                    class="fab fa-facebook-f"></i></a>
+                            <a class="btn btn-outline-secondary me-2 btn-md-square rounded-circle" href=""><i
+                                    class="fab fa-youtube"></i></a>
+                            <a class="btn btn-outline-secondary btn-md-square rounded-circle" href=""><i
+                                    class="fab fa-linkedin-in"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row g-5">
+                <div class="col-lg-3 col-md-6">
+                    <div class="footer-item">
+                        <h4 class="text-light mb-3">Why People Like us!</h4>
+                        <p class="mb-4">At Nuvora, we believe quality is the foundation of trust. We source the finest
+                            products to ensure your daily essentials are fresh, pure, and reliable.</p>
+                        <a href="" class="btn border-secondary py-2 px-4 rounded-pill text-primary">Read More</a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="d-flex flex-column text-start footer-item">
+                        <h4 class="text-light mb-3">Shop Info</h4>
+                        <a class="btn-link" href="">About Us</a>
+                        <a class="btn-link" href="">Contact Us</a>
+                        <a class="btn-link" href="">Privacy Policy</a>
+                        <a class="btn-link" href="">Terms & Condition</a>
+                        <a class="btn-link" href="">Return Policy</a>
+                        <a class="btn-link" href="">FAQs & Help</a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="d-flex flex-column text-start footer-item">
+                        <h4 class="text-light mb-3">Account</h4>
+                        <a class="btn-link" href="">My Account</a>
+                        <a class="btn-link" href="">Shop details</a>
+                        <a class="btn-link" href="">Shopping Cart</a>
+                        <a class="btn-link" href="">Wishlist</a>
+                        <a class="btn-link" href="">Order History</a>
+                        <a class="btn-link" href="">International Orders</a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="footer-item">
+                        <h4 class="text-light mb-3">Contact</h4>
+                        <p>Address: Sathyamangalam, Erode, TN, India</p>
+                        <p>Email: contact@nuvora.in</p>
+                        <p>Phone: +91 8110001001, +91 8110001007</p>
+                        <p>Payment Accepted</p>
+                        <img src="img/payment.png" class="img-fluid" alt="">
+                        <div class="mt-4"><a href="admin.html" class="text-muted small">Admin Panel</a></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Footer End -->
+
+    <!-- Copyright Start -->
+    <div class="container-fluid copyright bg-dark py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                    <span class="text-light"><a href="#"><i class="fas fa-copyright text-light me-2"></i>Nuvora</a>, All
+                        right reserved.</span>
+                </div>
+                <div class="col-md-6 my-auto text-center text-md-end text-white">
+                    <!--/*** The author’s attribution link must remain intact in the template. ***/-->
+                    <!--/*** If you wish to remove this credit link, please purchase the Pro Version . ***/-->
+                    Designed By <a class="border-bottom" href="https://htmlcodex.com">HTML Codex</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Copyright End -->
+
+
+
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-primary border-3 border-primary rounded-circle back-to-top"><i
+            class="fa fa-arrow-up"></i></a>
+
+
+    <!-- JavaScript Libraries -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="lib/easing/easing.min.js"></script>
+    <script src="lib/waypoints/waypoints.min.js"></script>
+    <script src="lib/lightbox/js/lightbox.min.js"></script>
+    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+
+    <!-- Template Javascript -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/main.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/database.js"></script>
+    <script src="js/dodo-payments.js"></script>
+
+    <!-- EmailJS for Email Notifications -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script src="js/email-service.js"></script>
+
+    <script src="js/auth.js?v=7"></script>
+</body>
+
+</html>

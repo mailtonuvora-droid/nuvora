@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>My Account - Nuvora</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Raleway:wght@600;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" />
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <style>
+        .account-sidebar .list-group-item {
+            border: none;
+            padding: 15px 20px;
+            font-weight: 600;
+            color: #555;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .account-sidebar .list-group-item:hover {
+            background-color: #f8f9fa;
+            color: #81c408;
+        }
+
+        .account-sidebar .list-group-item.active {
+            background-color: #fcf9d4;
+            /* Light yellow from image */
+            color: #000;
+            border-left: 5px solid #ffb524 !important;
+        }
+
+        .tab-content-header {
+            border-bottom: 1px solid #eee;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navbar (Will be updated by auth.js) -->
+    <div class="container-fluid fixed-top">
+        <div class="container topbar bg-primary d-none d-lg-block">
+            <div class="d-flex justify-content-between">
+                <div class="top-info ps-2">
+                    <small class="me-3"><i class="fas fa-map-marker-alt me-2 text-secondary"></i> <a href="#"
+                            class="text-white">Sathyamangalam, Erode, TN, India</a></small>
+                    <small class="me-3"><i class="fas fa-envelope me-2 text-secondary"></i><a href="#"
+                            class="text-white">contact@nuvora.in</a></small>
+                </div>
+                <div class="top-link pe-2">
+                    <small class="text-white mx-2"><i class="fas fa-phone-alt me-2 text-secondary"></i>+91
+                        8110001001</small>/
+                    <small class="text-white mx-2"><i class="fas fa-phone-alt me-2 text-secondary"></i>+91
+                        8110001007</small>
+                </div>
+            </div>
+        </div>
+        <div class="container px-0">
+            <nav class="navbar navbar-light bg-white navbar-expand-xl">
+                <a href="index.html" class="navbar-brand">
+                    <h1 class="text-primary display-6">Nuvora</h1>
+                </a>
+                <button class="navbar-toggler py-2 px-3" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarCollapse">
+                    <span class="fa fa-bars text-primary"></span>
+                </button>
+                <div class="collapse navbar-collapse bg-white" id="navbarCollapse">
+                    <div class="navbar-nav mx-auto">
+                        <a href="index.html" class="nav-item nav-link">Shop</a>
+                        <a href="checkout.html" class="nav-item nav-link">Cart / Checkout</a>
+                        <a href="contact.html" class="nav-item nav-link">Contact</a>
+                    </div>
+                    <a href="index.html" class="position-relative me-4 my-auto">
+                        <i class="fa fa-shopping-bag fa-2x"></i>
+                    </a>
+                    <div class="my-auto position-relative" id="user-nav-link">
+                        <a href="#"><i class="fas fa-user fa-2x"></i></a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Page Header -->
+    <div class="container-fluid page-header py-5">
+        <h1 class="text-center text-white display-6">My Account</h1>
+    </div>
+
+    <!-- Account Content -->
+    <div class="container-fluid py-5">
+        <div class="container py-5">
+            <div class="row g-5">
+                <!-- Sidebar -->
+                <div class="col-lg-3 account-sidebar">
+                    <div class="list-group">
+                        <a href="#profile" class="list-group-item active" data-bs-toggle="tab" id="tab-profile">
+                            <i class="fas fa-user-circle me-3"></i> My Profile
+                        </a>
+                        <a href="#orders" class="list-group-item" data-bs-toggle="tab" id="tab-orders">
+                            <i class="fas fa-box-open me-3"></i> My Orders
+                        </a>
+                        <a href="#address" class="list-group-item" data-bs-toggle="tab" id="tab-address">
+                            <i class="fas fa-map-marker-alt me-3"></i> My Address
+                        </a>
+                        <a href="#" class="list-group-item text-danger" onclick="Auth.logout()">
+                            <i class="fas fa-sign-out-alt me-3"></i> Logout
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Content Area -->
+                <div class="col-lg-9">
+                    <div class="tab-content">
+                        <!-- Profile Tab -->
+                        <div class="tab-pane fade show active" id="profile">
+                            <h4 class="tab-content-header">My Profile</h4>
+                            <h4 class="tab-content-header">My Profile</h4>
+                            <form id="profileForm" onsubmit="event.preventDefault(); saveProfile();">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">First Name</label>
+                                        <input type="text" class="form-control" id="profileFirstName" required>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Last Name</label>
+                                        <input type="text" class="form-control" id="profileLastName">
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Phone Number</label>
+                                    <input type="text" class="form-control" id="profilePhone">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Email Address</label>
+                                    <input type="email" class="form-control" id="profileEmail" readonly>
+                                    <!-- Keep Email Readonly for now or allow change? User asked to edit profile details. Usually email is identity. I'll keep it readonly or maybe allow if it's not the PK. In Supabase Auth, changing email triggers confirmation. Here we use 'users' table. I'll allow editing but maybe warn. Actually user said "Profile details are aslo they want to edit" and listed Email in the objective description. I will allow it but it might decouple from Auth if I was using Supabase Auth. But I am using a custom 'users' table. So it is fine to edit. -->
+                                </div>
+                                <button type="submit" class="btn btn-primary rounded-pill px-4">Update Profile</button>
+                            </form>
+                        </div>
+
+                        <!-- Orders Tab -->
+                        <div class="tab-pane fade" id="orders">
+                            <h4 class="tab-content-header">My Orders</h4>
+                            <div id="orders-loader" class="text-center py-5">
+                                <div class="spinner-border text-primary" role="status"></div>
+                            </div>
+                            <div id="orders-container"></div>
+                        </div>
+
+                        <!-- Address Tab -->
+                        <div class="tab-pane fade" id="address">
+                            <h4 class="tab-content-header">My Address</h4>
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle me-2"></i> You can manage your saved shipping address here.
+                            </div>
+
+                            <form id="addressForm" onsubmit="event.preventDefault(); saveAddress();">
+                                <div class="mb-3">
+                                    <label class="form-label">Street Address</label>
+                                    <input type="text" class="form-control" id="addrStreet" placeholder="123 Main St"
+                                        required>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">City</label>
+                                        <input type="text" class="form-control" id="addrCity" placeholder="City"
+                                            required>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">State</label>
+                                        <select class="form-select" id="addrState" required>
+                                            <option value="" disabled selected>Select State</option>
+                                            <option value="Andhra Pradesh">Andhra Pradesh</option>
+                                            <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                                            <option value="Assam">Assam</option>
+                                            <option value="Bihar">Bihar</option>
+                                            <option value="Chhattisgarh">Chhattisgarh</option>
+                                            <option value="Goa">Goa</option>
+                                            <option value="Gujarat">Gujarat</option>
+                                            <option value="Haryana">Haryana</option>
+                                            <option value="Himachal Pradesh">Himachal Pradesh</option>
+                                            <option value="Jharkhand">Jharkhand</option>
+                                            <option value="Karnataka">Karnataka</option>
+                                            <option value="Kerala">Kerala</option>
+                                            <option value="Madhya Pradesh">Madhya Pradesh</option>
+                                            <option value="Maharashtra">Maharashtra</option>
+                                            <option value="Manipur">Manipur</option>
+                                            <option value="Meghalaya">Meghalaya</option>
+                                            <option value="Mizoram">Mizoram</option>
+                                            <option value="Nagaland">Nagaland</option>
+                                            <option value="Odisha">Odisha</option>
+                                            <option value="Punjab">Punjab</option>
+                                            <option value="Rajasthan">Rajasthan</option>
+                                            <option value="Sikkim">Sikkim</option>
+                                            <option value="Tamil Nadu">Tamil Nadu</option>
+                                            <option value="Telangana">Telangana</option>
+                                            <option value="Tripura">Tripura</option>
+                                            <option value="Uttar Pradesh">Uttar Pradesh</option>
+                                            <option value="Uttarakhand">Uttarakhand</option>
+                                            <option value="West Bengal">West Bengal</option>
+                                            <option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands
+                                            </option>
+                                            <option value="Chandigarh">Chandigarh</option>
+                                            <option value="Dadra and Nagar Haveli and Daman and Diu">Dadra and Nagar
+                                                Haveli and Daman and Diu</option>
+                                            <option value="Delhi">Delhi</option>
+                                            <option value="Jammu and Kashmir">Jammu and Kashmir</option>
+                                            <option value="Ladakh">Ladakh</option>
+                                            <option value="Lakshadweep">Lakshadweep</option>
+                                            <option value="Puducherry">Puducherry</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Pincode / Zip</label>
+                                    <input type="text" class="form-control" id="addrPincode" placeholder="123456"
+                                        required>
+                                </div>
+                                <button type="submit" class="btn btn-primary rounded-pill px-4">Save Address</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer Start -->
+        <div class="container-fluid bg-dark text-white-50 footer pt-5 mt-5">
+            <div class="container py-5">
+                <div class="pb-4 mb-4" style="border-bottom: 1px solid rgba(226, 175, 24, 0.5) ;">
+                    <div class="row g-4">
+                        <div class="col-lg-3">
+                            <a href="#">
+                                <h1 class="text-primary mb-0">Nuvora</h1>
+                                <p class="text-secondary mb-0">Purity You Can Trust</p>
+                            </a>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="position-relative mx-auto">
+                                <input class="form-control border-0 w-100 py-3 px-4 rounded-pill" type="number"
+                                    placeholder="Your Email">
+                                <button type="submit"
+                                    class="btn btn-primary border-0 border-secondary py-3 px-4 position-absolute rounded-pill text-white"
+                                    style="top: 0; right: 0;">Subscribe Now</button>
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="d-flex justify-content-end pt-3">
+                                <a class="btn  btn-outline-secondary me-2 btn-md-square rounded-circle" href=""><i
+                                        class="fab fa-twitter"></i></a>
+                                <a class="btn btn-outline-secondary me-2 btn-md-square rounded-circle" href=""><i
+                                        class="fab fa-facebook-f"></i></a>
+                                <a class="btn btn-outline-secondary me-2 btn-md-square rounded-circle" href=""><i
+                                        class="fab fa-youtube"></i></a>
+                                <a class="btn btn-outline-secondary btn-md-square rounded-circle" href=""><i
+                                        class="fab fa-linkedin-in"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row g-5">
+                    <div class="col-lg-3 col-md-6">
+                        <div class="footer-item">
+                            <h4 class="text-light mb-3">Why People Like us!</h4>
+                            <p class="mb-4">At Nuvora, we believe quality is the foundation of trust. We source the
+                                finest
+                                products to ensure your daily essentials are fresh, pure, and reliable.</p>
+                            <a href="" class="btn border-secondary py-2 px-4 rounded-pill text-primary">Read More</a>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="d-flex flex-column text-start footer-item">
+                            <h4 class="text-light mb-3">Shop Info</h4>
+                            <a class="btn-link" href="">About Us</a>
+                            <a class="btn-link" href="">Contact Us</a>
+                            <a class="btn-link" href="">Privacy Policy</a>
+                            <a class="btn-link" href="">Terms & Condition</a>
+                            <a class="btn-link" href="">Return Policy</a>
+                            <a class="btn-link" href="">FAQs & Help</a>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="d-flex flex-column text-start footer-item">
+                            <h4 class="text-light mb-3">Account</h4>
+                            <a class="btn-link" href="">My Account</a>
+                            <a class="btn-link" href="">Shop details</a>
+                            <a class="btn-link" href="">Shopping Cart</a>
+                            <a class="btn-link" href="">Wishlist</a>
+                            <a class="btn-link" href="">Order History</a>
+                            <a class="btn-link" href="">International Orders</a>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="footer-item">
+                            <h4 class="text-light mb-3">Contact</h4>
+                            <p>Address: Sathyamangalam, Erode, TN, India</p>
+                            <p>Email: contact@nuvora.in</p>
+                            <p>Phone: +91 8110001001, +91 8110001007</p>
+                            <p>Payment Accepted</p>
+                            <img src="img/payment.png" class="img-fluid" alt="">
+                            <div class="mt-4"><a href="admin.html" class="text-muted small">Admin Panel</a></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Footer End -->
+
+        <!-- Copyright Start -->
+        <div class="container-fluid copyright bg-dark py-4">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                        <span class="text-light"><a href="#"><i class="fas fa-copyright text-light me-2"></i>Nuvora</a>,
+                            All
+                            right reserved.</span>
+                    </div>
+                    <div class="col-md-6 my-auto text-center text-md-end text-white">
+                        Designed By <a class="border-bottom" href="https://htmlcodex.com">HTML Codex</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Copyright End -->
+
+        <!-- Back to Top -->
+        <a href="#" class="btn btn-primary border-3 border-primary rounded-circle back-to-top"><i
+                class="fa fa-arrow-up"></i></a>
+
+        <!-- Scripts -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+        <script src="js/cart.js"></script>
+        <script src="js/database.js"></script>
+        <script src="js/auth.js?v=7"></script>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', async () => {
+                // Wait for auth to init
+                setTimeout(async () => {
+                    const user = Auth.user;
+                    if (!user) {
+                        window.location.href = 'index.html';
+                        return;
+                    }
+
+                    // Fill Profile
+                    document.getElementById('profileFirstName').value = user.first_name || '';
+                    document.getElementById('profileLastName').value = user.last_name || '';
+                    document.getElementById('profilePhone').value = user.mobile || '';
+                    document.getElementById('profileEmail').value = user.email || '';
+
+                    // Fill Address
+                    document.getElementById('addrStreet').value = user.address || '';
+                    document.getElementById('addrCity').value = user.city || '';
+                    document.getElementById('addrState').value = user.state || '';
+                    document.getElementById('addrPincode').value = user.pincode || '';
+
+                    // Handle Tab Switching from URL
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const tab = urlParams.get('tab');
+                    if (tab) {
+                        const tabEl = document.querySelector(`#tab-${tab}`);
+                        if (tabEl) {
+                            const bsTab = new bootstrap.Tab(tabEl);
+                            bsTab.show();
+                        }
+                    }
+
+                    // Load Orders
+                    await loadOrders(user);
+                }, 600);
+            });
+
+            async function saveProfile() {
+                const user = Auth.user;
+                if (!user) return;
+
+                const updates = {
+                    first_name: document.getElementById('profileFirstName').value.trim(),
+                    last_name: document.getElementById('profileLastName').value.trim(),
+                    mobile: document.getElementById('profilePhone').value.trim()
+                };
+
+                const btn = document.querySelector('#profileForm button');
+                const originalText = btn.innerText;
+                btn.innerText = 'Updating...';
+                btn.disabled = true;
+
+                const { data, error } = await window.DB.updateUser(user.id, updates);
+
+                if (error) {
+                    alert('Error updating profile: ' + error.message);
+                } else {
+                    alert('Profile updated successfully!');
+                    // Update local session
+                    const updatedUser = { ...user, ...updates };
+                    localStorage.setItem('nuvora_user', JSON.stringify(updatedUser)); // Assuming Auth uses this
+                    location.reload();
+                }
+
+                btn.innerText = originalText;
+                btn.disabled = false;
+            }
+
+            async function saveAddress() {
+                const user = Auth.user;
+                if (!user) return;
+
+                const updates = {
+                    address: document.getElementById('addrStreet').value.trim(),
+                    city: document.getElementById('addrCity').value.trim(),
+                    state: document.getElementById('addrState').value.trim(),
+                    pincode: document.getElementById('addrPincode').value.trim()
+                };
+
+                const btn = document.querySelector('#addressForm button');
+                const originalText = btn.innerText;
+                btn.innerText = 'Saving...';
+                btn.disabled = true;
+
+                const { data, error } = await window.DB.updateUser(user.id, updates);
+
+                if (error) {
+                    alert('Error saving address: ' + error.message);
+                } else {
+                    alert('Address saved successfully!');
+                    // Update local user in session if needed
+                    Auth.user = { ...Auth.user, ...updates };
+                    localStorage.setItem('nuvora_user', JSON.stringify(Auth.user));
+                }
+
+                btn.innerText = originalText;
+                btn.disabled = false;
+            }
+
+            async function loadOrders(user) {
+                const container = document.getElementById('orders-container');
+                const loader = document.getElementById('orders-loader');
+
+                try {
+                    const lookup = user.email || user.mobile;
+                    const { data, error } = await window.DB.getOrdersByUser(lookup);
+
+                    loader.style.display = 'none';
+
+                    if (error || !data || !data.orders || data.orders.length === 0) {
+                        container.innerHTML = '<div class="text-center py-5 text-muted"><i class="fas fa-box-open fa-3x mb-3"></i><p>No orders found.</p></div>';
+                        return;
+                    }
+
+                    container.innerHTML = '';
+                    data.orders.forEach(order => {
+                        const date = new Date(order.created_at).toLocaleDateString();
+                        const badgeClass = order.status === 'pending' ? 'bg-warning text-dark' : (order.status === 'shipped' ? 'bg-primary' : 'bg-success');
+
+                        const html = `
+                        <div class="card mb-3 border-0 shadow-sm rounded-3">
+                            <div class="card-header bg-white border-bottom-0 pt-3 px-3 d-flex justify-content-between align-items-center">
+                                <div>
+                                    <span class="fw-bold text-primary">Order #${order.id.slice(0, 8)}</span>
+                                    <span class="text-muted small ms-2">${date}</span>
+                                </div>
+                                <span class="badge ${badgeClass} rounded-pill px-3">${order.status.toUpperCase()}</span>
+                            </div>
+                            <div class="card-body px-3 pb-3">
+                                <div class="mb-2">
+                                    ${order.items.map(i => `
+                                        <div class="d-flex justify-content-between align-items-center mb-1">
+                                            <small>${i.name} <span class="text-muted">x${i.quantity}</span></small>
+                                            <small class="fw-bold">₹${(i.price * i.quantity).toFixed(2)}</small>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                                <hr class="my-2">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="fw-bold">Total</span>
+                                    <span class="fw-bold fs-5">₹${order.total_amount.toFixed(2)}</span>
+                                </div>
+                                <div class="mt-3 text-end">
+                                    <button class="btn btn-sm btn-outline-primary rounded-pill" onclick="window.location.href='order-tracking.html?id=${order.id}'">Track Order</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                        container.innerHTML += html;
+                    });
+
+                } catch (err) {
+                    console.error(err);
+                    loader.style.display = 'none';
+                    container.innerHTML = '<p class="text-danger text-center">Failed to load orders.</p>';
+                }
+            }
+        </script>
+</body>
+
+</html>

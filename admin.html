@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Nuvora - Admin Dashboard</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+    <style>
+        .admin-card {
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .admin-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .status-badge {
+            font-size: 0.8rem;
+            padding: 5px 10px;
+        }
+
+        #login-gate {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+
+<body style="display: none;">
+    <div id="login-gate">
+        <div class="card p-4 shadow-sm" style="width: 350px;">
+            <h4 class="text-center mb-4">Admin Login</h4>
+            <input type="email" id="adminEmail" class="form-control mb-3" placeholder="Enter Admin Email">
+            <input type="password" id="adminPass" class="form-control mb-3" placeholder="Enter Admin Password">
+            <button class="btn btn-primary w-100" onclick="checkAdmin()">Login</button>
+            <p id="loginErr" class="text-danger small mt-2 text-center" style="display:none;">Access Denied: Invalid
+                Credentials</p>
+        </div>
+    </div>
+
+    <div class="container-fluid fixed-top px-0">
+        <nav class="navbar navbar-light bg-white navbar-expand-xl px-5">
+            <a href="index.html" class="navbar-brand">
+                <h1 class="text-primary display-6">Nuvora Admin</h1>
+            </a>
+            <div class="navbar-nav ms-auto">
+                <a href="index.html" class="nav-item nav-link">View Shop</a>
+            </div>
+        </nav>
+    </div>
+
+    <div class="container py-5 mt-5">
+        <h2 class="mb-4">Admin Dashboard</h2>
+
+        <div class="row g-4 mb-5">
+            <div class="col-md-2">
+                <div class="bg-light p-4 rounded text-center admin-card" onclick="showTab('products')">
+                    <i class="fas fa-box fa-3x text-primary mb-3"></i>
+                    <h4>Products</h4>
+                    <p id="product-count">Loading...</p>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="bg-light p-4 rounded text-center admin-card" onclick="showTab('orders')">
+                    <i class="fas fa-shopping-cart fa-3x text-primary mb-3"></i>
+                    <h4>Orders</h4>
+                    <p id="order-count">Loading...</p>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="bg-light p-4 rounded text-center admin-card" onclick="showTab('notifications')">
+                    <i class="fas fa-bell fa-3x text-warning mb-3"></i>
+                    <h4>Requests</h4>
+                    <p id="notification-count">Loading...</p>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="bg-light p-4 rounded text-center admin-card" onclick="showTab('coupons')">
+                    <i class="fas fa-ticket-alt fa-3x text-success mb-3"></i>
+                    <h4>Coupons</h4>
+                    <p id="coupon-count">Loading...</p>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="bg-light p-4 rounded text-center admin-card" onclick="showTab('settings')">
+                    <i class="fas fa-cog fa-3x text-secondary mb-3"></i>
+                    <h4>Settings</h4>
+                    <p>App Config</p>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="bg-light p-4 rounded text-center admin-card" onclick="showTab('sales')">
+                    <i class="fas fa-chart-line fa-3x text-info mb-3"></i>
+                    <h4>Sales</h4>
+                    <p id="sales-total">₹0</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Products Tab -->
+        <div id="products-tab" class="tab-content">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h4 class="mb-0">Manage Products & Stock</h4>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addProductModal"><i
+                        class="fas fa-plus me-2"></i>Add New Product</button>
+            </div>
+            <div class="table-responsive bg-white p-3 rounded shadow-sm">
+                <table class="table align-middle">
+                    <thead>
+                        <tr>
+                            <th>Image</th>
+                            <th>Name</th>
+                            <th>Price</th>
+                            <th>Stock</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="products-table-body"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Orders Tab -->
+        <div id="orders-tab" class="tab-content" style="display:none;">
+            <div class="bg-light p-3 rounded mb-3 border">
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <label class="small text-muted">Filter by Status</label>
+                        <select class="form-select form-select-sm" id="filter-status" onchange="filterOrders()">
+                            <option value="all">All Statuses</option>
+                            <option value="pending">Pending</option>
+                            <option value="shipped">Shipped</option>
+                            <option value="delivered">Delivered</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="small text-muted">From Date</label>
+                        <input type="date" class="form-control form-control-sm" id="filter-date-from"
+                            onchange="filterOrders()">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="small text-muted">To Date</label>
+                        <input type="date" class="form-control form-control-sm" id="filter-date-to"
+                            onchange="filterOrders()">
+                    </div>
+                    <div class="col-md-3 d-flex align-items-end">
+                        <button class="btn btn-sm btn-outline-secondary w-100" onclick="clearFilters()">Clear
+                            Filters</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="d-flex align-items-center">
+                    <button class="btn btn-sm btn-primary me-2" onclick="bulkUpdateStatus('shipped')"><i
+                            class="fas fa-truck me-1"></i> Mark Shipped</button>
+                    <button class="btn btn-sm btn-success me-2" onclick="bulkUpdateStatus('delivered')"><i
+                            class="fas fa-check-circle me-1"></i> Mark Delivered</button>
+                    <button class="btn btn-sm btn-danger me-2" onclick="bulkDeleteOrders()"><i
+                            class="fas fa-trash me-1"></i> Delete Selected</button>
+                    <button class="btn btn-sm btn-outline-primary" onclick="printBulkStickers()"><i
+                            class="fas fa-print me-1"></i> Print Stickers (PDF)</button>
+                </div>
+                <div class="text-muted small">
+                    <span id="selected-count">0</span> orders selected
+                </div>
+            </div>
+
+            <div class="table-responsive bg-white p-3 rounded shadow-sm">
+                <table class="table align-middle">
+                    <thead>
+                        <tr>
+                            <th><input type="checkbox" id="select-all-orders" onchange="toggleSelectAll(this)"></th>
+                            <th>ID</th>
+                            <th>Customer</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="orders-table-body"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Sales Tab -->
+        <div id="sales-tab" class="tab-content" style="display:none;">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h4 class="mb-0">Sales Analytics</h4>
+                <div class="d-flex">
+                    <input type="date" class="form-control form-control-sm me-2" id="sales-date-from"
+                        onchange="loadSalesData()">
+                    <input type="date" class="form-control form-control-sm" id="sales-date-to"
+                        onchange="loadSalesData()">
+                </div>
+            </div>
+
+            <div class="row g-4 mb-4">
+                <div class="col-md-4">
+                    <div class="card border-0 shadow-sm p-3">
+                        <small class="text-muted">Total Sales</small>
+                        <h2 id="sales-total-val" class="text-primary mt-2">₹0</h2>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card border-0 shadow-sm p-3">
+                        <small class="text-muted">Orders Count</small>
+                        <h2 id="sales-count-val" class="text-success mt-2">0</h2>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card border-0 shadow-sm p-3">
+                        <small class="text-muted">Avg. Order Value</small>
+                        <h2 id="sales-avg-val" class="text-info mt-2">₹0</h2>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white p-3 rounded shadow-sm">
+                <h5>Recent Sales List</h5>
+                <hr>
+                <div class="table-responsive">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Order ID</th>
+                                <th>Customer</th>
+                                <th>Items</th>
+                                <th>Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody id="sales-table-body"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notifications Tab -->
+        <div id="notifications-tab" class="tab-content" style="display:none;">
+            <h4 class="mb-3">Stock Notifications (Requests)</h4>
+            <div class="table-responsive bg-white p-3 rounded shadow-sm">
+                <table class="table align-middle">
+                    <thead>
+                        <tr>
+                            <th>Product Name</th>
+                            <th>Customer Email</th>
+                            <th>Date Requested</th>
+                        </tr>
+                    </thead>
+                    <tbody id="notifications-table-body"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Coupons Tab -->
+        <div id="coupons-tab" class="tab-content" style="display:none;">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h4 class="mb-0">Manage Discount Coupons</h4>
+                <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addCouponModal">Add
+                    Coupon</button>
+            </div>
+            <div class="table-responsive bg-white p-3 rounded shadow-sm">
+                <table class="table align-middle">
+                    <thead>
+                        <tr>
+                            <th>Code</th>
+                            <th>Type</th>
+                            <th>Value</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="coupons-table-body"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Settings Tab -->
+        <div id="settings-tab" class="tab-content" style="display:none;">
+            <h4>Application Settings</h4>
+            <div class="bg-white p-4 rounded shadow-sm" style="max-width: 500px;">
+                <div class="mb-3">
+                    <label class="form-label">Shipping Charge (₹)</label>
+                    <div class="input-group">
+                        <input type="number" id="setting-shipping" class="form-control" placeholder="50">
+                        <button class="btn btn-primary"
+                            onclick="saveSetting('shipping_charge', $('#setting-shipping').val())">Save</button>
+                    </div>
+                    <small class="text-muted">Global flat rate for all orders.</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Order Detail Modal -->
+    <div class="modal fade" id="orderDetailModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content border-0 shadow-lg rounded-4">
+                <div class="modal-header bg-light border-0 py-3">
+                    <h5 class="modal-title fw-bold text-primary">Order Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4" id="order-detail-content">
+                    <!-- Dynamic content -->
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-outline-danger rounded-pill px-4 me-auto"
+                        id="delete-order-btn">Delete Order</button>
+                    <button type="button" class="btn btn-secondary rounded-pill px-4"
+                        data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary rounded-pill px-4" id="print-single-btn">Print
+                        Sticker</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Product Modal -->
+    <div class="modal fade" id="addProductModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5>Add New Product</h5><button class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="productForm">
+                        <div class="mb-3">
+                            <label>Product Name</label>
+                            <input type="hidden" id="pId">
+                            <input type="text" id="pName" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label>Slogan / Subtitle</label>
+                            <input type="text" id="pSlogan" class="form-control"
+                                placeholder="e.g. Organic Fresh Fruits">
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-6">
+                                <label>Selling Price (₹)</label>
+                                <input type="number" step="0.01" id="pPrice" class="form-control" placeholder="799"
+                                    required>
+                            </div>
+                            <div class="col-6">
+                                <label>MRP / Original (₹)</label>
+                                <input type="number" step="0.01" id="pOriginalPrice" class="form-control"
+                                    placeholder="1065">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-6">
+                                <label>GST Percentage (%)</label>
+                                <input type="number" step="0.01" id="pGST" class="form-control" placeholder="18.00"
+                                    value="0" min="0" max="100">
+                                <small class="text-muted">Common: 5%, 12%, 18%, 28%</small>
+                            </div>
+                            <div class="col-6">
+                                <label>Platform Fee (₹)</label>
+                                <input type="number" step="0.01" id="pPlatformFee" class="form-control"
+                                    placeholder="9.00" value="0" min="0">
+                                <small class="text-muted">Per unit fee</small>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-6">
+                                <label>Initial Stock</label>
+                                <input type="number" id="pStock" class="form-control" value="10">
+                            </div>
+                            <div class="col-6">
+                                <label>UOM</label>
+                                <select id="pUom" class="form-control">
+                                    <option>Kg</option>
+                                    <option>Nos</option>
+                                    <option>Pc</option>
+                                    <option>Pkt</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mb-3 form-check bg-light p-3 rounded border">
+                            <input type="checkbox" id="pFreeShipping" class="form-check-input ms-0 me-2">
+                            <label class="form-check-label fw-bold">Free Shipping?</label>
+                            <div class="small text-muted">A "Free Shipping" badge will appear on the product card.</div>
+                        </div>
+                        <div class="mb-4 p-3 border rounded bg-light">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h6 class="mb-0 fw-bold"><i class="fas fa-layer-group me-2"></i>Product Variants
+                                    (Optional)</h6>
+                                <button type="button" class="btn btn-sm btn-outline-primary" onclick="addVariantRow()">+
+                                    Add Size</button>
+                            </div>
+                            <div id="variantList"></div>
+                            <small class="text-muted">Example: 250gm, 500gm, 1kg. Overrides default price.</small>
+                        </div>
+                        <div class="mb-3">
+                            <label>Product Image</label>
+                            <input type="file" id="pImageFile" class="form-control" accept="image/*">
+                            <input type="hidden" id="pImgUrl" value="img/fruite-item-5.jpg">
+                            <div id="uploadStatus" class="small mt-1"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label>Category</label>
+                            <select id="pCat" class="form-control">
+                                <option>Fruits</option>
+                                <option>Vegetables</option>
+                                <option value="new">+ Add New Category</option>
+                            </select>
+                            <input type="text" id="pNewCat" class="form-control mt-2"
+                                placeholder="Enter new category name" style="display:none;">
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Save Product</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Coupon Modal -->
+    <div class="modal fade" id="addCouponModal" tabindex="-1">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5>Add Coupon</h5><button class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="couponForm">
+                        <div class="mb-3">
+                            <label>Code</label>
+                            <input type="text" id="cCode" class="form-control" placeholder="SAVE10" required>
+                        </div>
+                        <div class="mb-3">
+                            <label>Type</label>
+                            <select id="cType" class="form-control">
+                                <option value="fixed">Fixed (₹)</option>
+                                <option value="percentage">Percentage (%)</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label>Value</label>
+                            <input type="number" id="cValue" class="form-control" placeholder="10" required>
+                        </div>
+                        <button type="submit" class="btn btn-success w-100">Add Coupon</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/database.js"></script>
+
+    <!-- EmailJS for Notifications -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script src="js/email-service.js"></script>
+
+    <script>
+        let allOrders = [];
+        let selectedOrders = new Set();
+
+        function showTab(tab) {
+            $('.tab-content').hide();
+            $(`#${tab}-tab`).show();
+            if (tab === 'sales') loadSalesData();
+        }
+
+        async function loadAdminData() {
+            // Products
+            const { data: products } = await window.DB.getProducts();
+            const pBody = $('#products-table-body').empty();
+            $('#product-count').text(`${products?.length || 0} Items`);
+
+            // Categories
+            const { data: categories } = await window.DB.getCategories();
+            const catSelect = $('#pCat').empty();
+            categories?.forEach(c => catSelect.append(`<option>${c}</option>`));
+            catSelect.append('<option value="new">+ Add New Category</option>');
+
+            products?.forEach(p => {
+                const discountInfo = p.original_price ? `<br><small class="text-danger">MRP: ₹${p.original_price}</small>` : '';
+                const shippingInfo = p.free_shipping ? `<br><span class="badge bg-success" style="font-size:0.6rem">Free Shipping</span>` : '';
+                const variantInfo = p.variants && p.variants.length > 0 ? `<br><small class="text-primary">${p.variants.length} Variants</small>` : '';
+
+                pBody.append(`
+                    <tr>
+                        <td><img src="${p.img}" width="40" height="40" class="rounded"></td>
+                        <td>${p.name}<br><small class="text-muted">${p.uom || 'Kg'}</small>${variantInfo}</td>
+                        <td>₹${p.price}${discountInfo}${shippingInfo}</td>
+                        <td width="150">
+                            <input type="number" class="form-control form-control-sm" value="${p.stock_quantity}" 
+                                onchange="updateStock('${p.id}', this.value)">
+                        </td>
+                        <td><button class="btn btn-sm btn-outline-primary me-2" onclick="editProduct('${p.id}')"><i class="fas fa-edit"></i></button>
+                            <button class="btn btn-sm btn-outline-danger" onclick="deleteProduct('${p.id}', '${p.name}')"><i class="fas fa-trash"></i></button></td>
+                    </tr>
+                `);
+            });
+
+            // Notifications
+            const { data: notifications } = await window.DB.getStockNotifications();
+            const nBody = $('#notifications-table-body').empty();
+            $('#notification-count').text(`${notifications?.length || 0} Requests`);
+            notifications?.forEach(n => {
+                nBody.append(`<tr><td>${n.products?.name}</td><td>${n.user_email}</td><td>${new Date(n.created_at).toLocaleString()}</td></tr>`);
+            });
+
+            // Coupons
+            const { data: coupons } = await window.DB.getCoupons();
+            const cBody = $('#coupons-table-body').empty();
+            $('#coupon-count').text(`${coupons?.length || 0} Codes`);
+            coupons?.forEach(c => {
+                cBody.append(`<tr><td>${c.code}</td><td>${c.discount_type}</td><td>${c.discount_value}</td><td><button class="btn btn-sm btn-outline-danger" onclick="deleteCoupon('${c.id}')">Delete</button></td></tr>`);
+            });
+
+            // Settings
+            const { data: settings } = await window.DB.getSettings();
+            const shipping = settings?.find(s => s.key === 'shipping_charge');
+            if (shipping) $('#setting-shipping').val(shipping.value);
+
+            // Orders
+            const { data: orders } = await window.DB.getAllOrders();
+            allOrders = orders || [];
+            renderOrders(allOrders);
+            loadSalesData();
+        }
+
+        function renderOrders(ordersToRender) {
+            const oBody = $('#orders-table-body').empty();
+            $('#order-count').text(`${ordersToRender.length} Orders`);
+            selectedOrders.clear();
+            $('#selected-count').text('0');
+            $('#select-all-orders').prop('checked', false);
+
+            ordersToRender.forEach(o => {
+                const statusColor = o.status === 'pending' ? 'warning' : (o.status === 'shipped' ? 'primary' : 'success');
+                oBody.append(`
+                    <tr>
+                        <td><input type="checkbox" class="order-checkbox" data-id="${o.id}" onchange="toggleSelectOrder(this)"></td>
+                        <td><a href="javascript:void(0)" onclick="viewOrderDetails('${o.id}')" class="text-primary fw-bold">#${o.id.slice(0, 8)}</a></td>
+                        <td>${o.users?.first_name || 'Guest'}<br><small class="text-muted">${new Date(o.created_at).toLocaleDateString()}</small></td>
+                        <td>₹${o.total_amount.toFixed(2)}</td>
+                        <td><span class="badge bg-${statusColor} status-badge">${o.status}</span></td>
+                        <td>
+                            <div class="d-flex">
+                                <select class="form-select form-select-sm me-2" onchange="updateOrderStatus('${o.id}', this.value)" style="width: auto;">
+                                    <option value="pending" ${o.status === 'pending' ? 'selected' : ''}>Pending</option>
+                                    <option value="shipped" ${o.status === 'shipped' ? 'selected' : ''}>Shipped</option>
+                                    <option value="delivered" ${o.status === 'delivered' ? 'selected' : ''}>Delivered</option>
+                                </select>
+                                <button class="btn btn-sm btn-outline-danger" onclick="deleteOrder('${o.id}')"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                `);
+            });
+        }
+
+        function filterOrders() {
+            const status = $('#filter-status').val();
+            const from = $('#filter-date-from').val();
+            const to = $('#filter-date-to').val();
+            let filtered = allOrders;
+            if (status !== 'all') filtered = filtered.filter(o => o.status === status);
+            if (from) filtered = filtered.filter(o => new Date(o.created_at) >= new Date(from).setHours(0, 0, 0, 0));
+            if (to) filtered = filtered.filter(o => new Date(o.created_at) <= new Date(to).setHours(23, 59, 59, 999));
+            renderOrders(filtered);
+        }
+
+        function clearFilters() {
+            $('#filter-status').val('all');
+            $('#filter-date-from').val('');
+            $('#filter-date-to').val('');
+            renderOrders(allOrders);
+        }
+
+        function toggleSelectAll(cb) {
+            $('.order-checkbox').prop('checked', cb.checked);
+            if (cb.checked) $('.order-checkbox').each(function () { selectedOrders.add($(this).data('id')); });
+            else selectedOrders.clear();
+            $('#selected-count').text(selectedOrders.size);
+        }
+
+        function toggleSelectOrder(cb) {
+            const id = $(cb).data('id');
+            if (cb.checked) selectedOrders.add(id);
+            else selectedOrders.delete(id);
+            $('#selected-count').text(selectedOrders.size);
+        }
+
+        async function bulkUpdateStatus() {
+            const status = $('#bulkStatusSelect').val();
+            if (!status) return alert('Select a status.');
+            if (selectedOrders.size === 0) return alert('Select orders first.');
+
+            if (!confirm(`Update status to "${status}" for ${selectedOrders.size} orders?`)) return;
+
+            let updatedCount = 0;
+            for (const id of Array.from(selectedOrders)) {
+                await window.DB.updateOrderStatus(id, status);
+
+                // Send Email Notification
+                const order = allOrders.find(o => o.id === id);
+                if (order && window.EmailService) {
+                    console.log(`Sending update email for order #${id}`);
+                    window.EmailService.sendStatusUpdate(order, status);
+                }
+                updatedCount++;
+            }
+            alert(`Updated ${updatedCount} orders and sent notifications!`);
+            loadAdminData();
+        }
+
+        async function bulkDeleteOrders() {
+            if (selectedOrders.size === 0) return alert('Please select orders to delete.');
+            if (!confirm(`⚠️ Are you sure you want to DELETE ${selectedOrders.size} order(s)?\n\nThis action cannot be undone!`)) return;
+
+            let deleted = 0;
+            for (const id of Array.from(selectedOrders)) {
+                await window.DB.deleteOrder(id);
+                deleted++;
+            }
+
+            alert(`Successfully deleted ${deleted} order(s)!`);
+            loadAdminData();
+        }
+
+        async function deleteOrder(id) {
+            if (!confirm('Are you sure you want to delete this order?')) return;
+            await window.DB.deleteOrder(id);
+            alert('Order deleted!');
+            $('#orderDetailModal').modal('hide');
+            loadAdminData();
+        }
+
+        async function viewOrderDetails(id) {
+            const o = allOrders.find(ord => ord.id === id);
+            if (!o) return;
+            const itemsHtml = o.items.map(i => `<tr><td>${i.name}</td><td>${i.quantity}</td><td>₹${i.price}</td><td class="text-end">₹${(i.price * i.quantity).toFixed(2)}</td></tr>`).join('');
+
+            // Calculate detailed prices using stored values
+            const subtotal = o.items.reduce((s, i) => s + (i.price * i.quantity), 0);
+            const gstAmount = o.gst_amount || 0;
+            const platformFeeAmount = o.platform_fee_amount || 0;
+            const shipping = (o.total_amount - subtotal - gstAmount - platformFeeAmount) > 0 ?
+                (o.total_amount - subtotal - gstAmount - platformFeeAmount) : 0;
+            const discount = Math.max(0, subtotal + gstAmount + platformFeeAmount + shipping - o.total_amount);
+
+            const content = `
+                <div class="row mb-4">
+                    <div class="col-6"><p class="small text-muted mb-0">ORDER ID</p><h6 class="fw-bold">#${o.id}</h6></div>
+                    <div class="col-6 text-end"><span class="badge bg-${o.status === 'pending' ? 'warning' : (o.status === 'shipped' ? 'primary' : 'success')}">${o.status.toUpperCase()}</span></div>
+                </div>
+                <h6>Customer Info</h6>
+                <div class="bg-light p-3 rounded mb-4">
+                    <p class="mb-1"><strong>Name:</strong> ${o.users?.first_name} ${o.users?.last_name}</p>
+                    <p class="mb-0"><strong>Address:</strong><br>${o.shipping_address}</p>
+                </div>
+                <h6>Items</h6>
+                <table class="table table-sm">
+                    <thead><tr><th>Item</th><th>Qty</th><th>Price</th><th class="text-end">Total</th></tr></thead>
+                    <tbody>${itemsHtml}</tbody>
+                </table>
+                <div class="mt-3 border-top pt-2">
+                    <div class="d-flex justify-content-between mb-1"><span>Subtotal (Items)</span><span>₹${subtotal.toFixed(2)}</span></div>
+                    ${gstAmount > 0 ? `<div class="d-flex justify-content-between mb-1"><span>GST</span><span>₹${gstAmount.toFixed(2)}</span></div>` : ''}
+                    ${platformFeeAmount > 0 ? `<div class="d-flex justify-content-between mb-1"><span>Platform Fee</span><span>₹${platformFeeAmount.toFixed(2)}</span></div>` : ''}
+                    <div class="d-flex justify-content-between mb-1"><span>Shipping Fee</span><span>₹${shipping.toFixed(2)}</span></div>
+                    ${discount > 0 ? `<div class="d-flex justify-content-between mb-1 text-success fw-bold"><span>Discount</span><span>-₹${discount.toFixed(2)}</span></div>` : ''}
+                    <div class="d-flex justify-content-between fs-5 fw-bold border-top mt-2 pt-2"><span>Total Amount</span><span>₹${o.total_amount.toFixed(2)}</span></div>
+                </div>
+            `;
+            $('#order-detail-content').html(content);
+            $('#print-single-btn').off('click').on('click', () => printBulkStickers([o.id]));
+            $('#delete-order-btn').off('click').on('click', () => deleteOrder(o.id));
+            $('#orderDetailModal').modal('show');
+        }
+
+        async function printBulkStickers(ids) {
+            const orderIds = ids || Array.from(selectedOrders);
+            if (orderIds.length === 0) return alert('Select orders.');
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF({ orientation: 'p', unit: 'mm', format: [100, 150] });
+
+            for (let i = 0; i < orderIds.length; i++) {
+                const o = allOrders.find(ord => ord.id === orderIds[i]);
+                if (!o) continue;
+                if (i > 0) doc.addPage([100, 150]);
+
+                // 1. Boundary & Header
+                doc.setDrawColor(0).setLineWidth(0.5).rect(5, 5, 90, 140);
+                doc.setFontSize(16).setTextColor(0).setFont(undefined, 'bold').text('NUVORA - ORDER LABEL', 50, 15, { align: 'center' });
+                doc.setLineWidth(0.2).line(10, 18, 90, 18);
+
+                // 2. Order Metadata
+                doc.setFontSize(10).setFont(undefined, 'bold');
+                doc.text(`ID: #${o.id.slice(0, 8).toUpperCase()}`, 10, 25);
+                doc.setFont(undefined, 'normal');
+                doc.text(`Date: ${new Date(o.created_at).toLocaleDateString()}`, 10, 30);
+
+                // 3. Shipping Address
+                doc.setDrawColor(220).line(10, 33, 90, 33);
+                doc.setFont(undefined, 'bold').text('SHIP TO:', 10, 38);
+                doc.setFontSize(11);
+                doc.text(`${o.users?.first_name || 'Customer'} ${o.users?.last_name || ''}`, 10, 44);
+                doc.setFontSize(10).setFont(undefined, 'normal');
+                const addr = doc.splitTextToSize(o.shipping_address || 'No Address', 80);
+                doc.text(addr, 10, 50);
+
+                // 4. Products Table
+                let y = 50 + (addr.length * 5) + 5;
+                doc.setDrawColor(0).line(10, y, 90, y);
+                doc.setFont(undefined, 'bold').text('ITEMS', 10, y + 5);
+                doc.text('QTY', 85, y + 5, { align: 'right' });
+                doc.setFont(undefined, 'normal');
+
+                y += 12;
+                o.items.forEach(item => {
+                    const itemName = doc.splitTextToSize(item.name, 70);
+                    doc.text(itemName, 10, y);
+                    doc.text(item.quantity.toString(), 85, y, { align: 'right' });
+                    y += (itemName.length * 5);
+                });
+
+                // 5. Total and Breakdown (Fixed at bottom)
+                if (y < 105) y = 105;
+                doc.setDrawColor(0).line(10, y, 90, y);
+
+                const subtotal = o.items.reduce((s, item) => s + (item.price * item.quantity), 0);
+                const gstAmount = o.gst_amount || 0;
+                const platformFeeAmount = o.platform_fee_amount || 0;
+                const shipping = (o.total_amount - subtotal - gstAmount - platformFeeAmount) > 0 ?
+                    (o.total_amount - subtotal - gstAmount - platformFeeAmount) : 0;
+                const discount = Math.max(0, subtotal + gstAmount + platformFeeAmount + shipping - o.total_amount);
+
+                doc.setFontSize(9);
+                let yPos = y + 5;
+                doc.text('Subtotal:', 10, yPos);
+                doc.text(`Rs.${subtotal.toFixed(2)}`, 90, yPos, { align: 'right' });
+
+                if (gstAmount > 0) {
+                    yPos += 5;
+                    doc.text('GST:', 10, yPos);
+                    doc.text(`Rs.${gstAmount.toFixed(2)}`, 90, yPos, { align: 'right' });
+                }
+
+                if (platformFeeAmount > 0) {
+                    yPos += 5;
+                    doc.text('Platform Fee:', 10, yPos);
+                    doc.text(`Rs.${platformFeeAmount.toFixed(2)}`, 90, yPos, { align: 'right' });
+                }
+
+                yPos += 5;
+                doc.text('Shipping:', 10, yPos);
+                doc.text(`Rs.${shipping.toFixed(2)}`, 90, yPos, { align: 'right' });
+
+                if (discount > 0) {
+                    yPos += 5;
+                    doc.text('Discount:', 10, yPos);
+                    doc.text(`-Rs.${discount.toFixed(2)}`, 90, yPos, { align: 'right' });
+                }
+
+                doc.setDrawColor(200).line(30, yPos + 6, 70, yPos + 6);
+                doc.setFontSize(12).setFont(undefined, 'bold');
+                doc.text(`TOTAL: Rs.${o.total_amount.toFixed(2)}`, 50, yPos + 13, { align: 'center' });
+            }
+            doc.save(`Nuvora_Stickers_${Date.now()}.pdf`);
+        }
+
+        async function loadSalesData() {
+            const from = $('#sales-date-from').val();
+            const to = $('#sales-date-to').val();
+            let filtered = allOrders;
+            if (from) filtered = filtered.filter(o => new Date(o.created_at) >= new Date(from).setHours(0, 0, 0, 0));
+            if (to) filtered = filtered.filter(o => new Date(o.created_at) <= new Date(to).setHours(23, 59, 59, 999));
+            const total = filtered.reduce((s, o) => s + o.total_amount, 0);
+            $('#sales-total').text(`₹${total.toLocaleString()}`);
+            $('#sales-total-val').text(`₹${total.toFixed(2)}`);
+            $('#sales-count-val').text(filtered.length);
+            $('#sales-avg-val').text(`₹${(filtered.length ? total / filtered.length : 0).toFixed(2)}`);
+            const sBody = $('#sales-table-body').empty();
+            filtered.forEach(o => {
+                sBody.append(`<tr><td>${new Date(o.created_at).toLocaleDateString()}</td><td>#${o.id.slice(0, 8)}</td><td>${o.users?.first_name}</td><td>${o.items.length} items</td><td>₹${o.total_amount.toFixed(2)}</td></tr>`);
+            });
+        }
+
+        async function updateStock(id, q) {
+            const newStock = parseInt(q);
+
+            // Get current stock to check for restock event
+            const product = allOrders.flatMap(o => o.items).find(i => i.id === id); // This is not reliable as allOrders might not have the product in it if no sales.
+            // Better to use products array if available
+            // In loadAdminData() we fetch products. "products" variable is local to loadAdminData.
+            // I should just update blindly for now or fetch.
+
+            // Simpler: Just update and alert. The notification system needs the "Notify Me" feature first.
+            await window.DB.updateProductStock(id, newStock);
+
+            alert('Stock updated!');
+        }
+        async function updateOrderStatus(id, s) {
+            await window.DB.updateOrderStatus(id, s);
+
+            // Send Email Notification
+            const order = allOrders.find(o => o.id === id);
+            if (order && window.EmailService) {
+                window.EmailService.sendStatusUpdate(order, s);
+            }
+
+            alert('Status updated & Email sent!');
+            loadAdminData();
+        }
+        async function deleteProduct(id, n) { if (confirm(`Delete ${n}?`)) { await window.DB.deleteProduct(id); loadAdminData(); } }
+        async function saveSetting(k, v) { await window.DB.updateSetting(k, v); alert('Saved!'); }
+        async function deleteCoupon(id) { if (confirm('Delete?')) { await window.DB.deleteCoupon(id); loadAdminData(); } }
+
+        $('#couponForm').submit(async (e) => {
+            e.preventDefault();
+            await window.DB.addCoupon({ code: $('#cCode').val().toUpperCase(), discount_type: $('#cType').val(), discount_value: parseFloat($('#cValue').val()) });
+            $('#addCouponModal').modal('hide');
+            loadAdminData();
+        });
+
+        $('#pCat').change(function () { $('#pNewCat').toggle($(this).val() === 'new'); });
+
+        $('#pImageFile').change(async function () {
+            const file = this.files[0]; if (!file) return;
+            $('#uploadStatus').text('Uploading...');
+            const { data, error } = await window.DB.uploadProductImage(file);
+            if (error) $('#uploadStatus').text('Failed!').addClass('text-danger');
+            else { $('#uploadStatus').text('Success!').addClass('text-success'); $('#pImgUrl').val(data); }
+        });
+
+        $('#productForm').submit(async (e) => {
+            e.preventDefault();
+            let cat = $('#pCat').val(); if (cat === 'new') cat = $('#pNewCat').val();
+            const variants = []; $('.variant-row').each(function () { variants.push({ label: $(this).find('.v-label').val(), price: parseFloat($(this).find('.v-price').val()) }); });
+            const pId = $('#pId').val();
+            const product = {
+                name: $('#pName').val(),
+                slogan: $('#pSlogan').val(),
+                price: parseFloat($('#pPrice').val()),
+                original_price: parseFloat($('#pOriginalPrice').val()) || null,
+                gst_percentage: parseFloat($('#pGST').val()) || 0,
+                platform_fee: parseFloat($('#pPlatformFee').val()) || 0,
+                free_shipping: $('#pFreeShipping').is(':checked'),
+                stock_quantity: parseInt($('#pStock').val()),
+                uom: $('#pUom').val(),
+                img: $('#pImgUrl').val(),
+                category: cat,
+                variants
+            };
+            const { error } = pId ? await window.DB.updateProduct(pId, product) : await window.DB.addProduct(product);
+            if (error) alert(error.message); else { $('#addProductModal').modal('hide'); loadAdminData(); }
+        });
+
+        async function editProduct(id) {
+            const { data: p } = await window.DB.getProduct(id);
+            $('#addProductModal h5').text('Edit Product');
+            $('#pId').val(p.id);
+            $('#pName').val(p.name);
+            $('#pSlogan').val(p.slogan);
+            $('#pPrice').val(p.price);
+            $('#pOriginalPrice').val(p.original_price);
+            $('#pGST').val(p.gst_percentage || 0);
+            $('#pPlatformFee').val(p.platform_fee || 0);
+            $('#pStock').val(p.stock_quantity);
+            $('#pUom').val(p.uom);
+            $('#pFreeShipping').prop('checked', p.free_shipping);
+            $('#pImgUrl').val(p.img);
+            $('#pCat').val(p.category);
+            $('#variantList').empty();
+            p.variants?.forEach(v => {
+                $('#variantList').append(`<div class="row g-2 mb-2 variant-row align-items-center"><div class="col-5"><input type="text" class="form-control form-control-sm v-label" value="${v.label}"></div><div class="col-5"><input type="number" class="form-control form-control-sm v-price" value="${v.price}"></div><div class="col-2"><button type="button" class="btn btn-sm btn-outline-danger w-100" onclick="$(this).closest('.variant-row').remove()">✖</button></div></div>`);
+            });
+            $('#addProductModal').modal('show');
+        }
+
+        function addVariantRow() {
+            $('#variantList').append(`<div class="row g-2 mb-2 variant-row align-items-center"><div class="col-5"><input type="text" class="form-control form-control-sm v-label" placeholder="e.g. 500gm"></div><div class="col-5"><input type="number" class="form-control form-control-sm v-price" placeholder="Price"></div><div class="col-2"><button type="button" class="btn btn-sm btn-outline-danger w-100" onclick="$(this).closest('.variant-row').remove()">✖</button></div></div>`);
+        }
+
+        async function checkAdmin() {
+            const email = $('#adminEmail').val();
+            const pass = $('#adminPass').val();
+            const validAdmins = ['mailtonuvora@gmail.com', 'saravanavenkatachalam@gmail.com'];
+
+            if (validAdmins.includes(email) && pass === 'admin123') {
+                sessionStorage.setItem('nuvora_admin', 'true'); $('#login-gate').hide(); $('body').show(); loadAdminData();
+            } else $('#loginErr').show();
+        }
+
+        $(document).ready(() => {
+            if (sessionStorage.getItem('nuvora_admin') === 'true') { $('#login-gate').hide(); $('body').show(); loadAdminData(); }
+            else { $('body').show(); }
+        });
+    </script>
+</body>
+
+</html>

@@ -23,12 +23,15 @@ async function createDodoPaymentSession(orderData) {
                     quantity: 1
                 }
             ],
-            paymentAmount: amountInSmallestUnit, // Explicitly set amount (PWYW override)
+            paymentAmount: amountInSmallestUnit, // Primary for PWYW
+            amount: amountInSmallestUnit,        // Fallback
             billing_address: {
                 street: orderData.address || '',
                 city: orderData.city || '',
                 state: orderData.state || '',
-                zip: orderData.pincode || '',
+                zipcode: orderData.pincode || '',   // Dodo lowercase
+                zip_code: orderData.pincode || '',  // Common variation
+                zip: orderData.pincode || '',       // Legacy attempt
                 country: 'IN'
             },
             customer: {

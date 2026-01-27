@@ -1,0 +1,19 @@
+{
+    "product_cart": [
+        {
+            "product_id": "pdt_0NXAXk31D7GF7kqxdwf3Z",
+            "quantity": 1
+        }
+    ],
+    "paymentAmount": 50000,
+    "billing_address": {
+        "country": "IN",
+        "zipCode": "638401"
+    },
+    "customer": {
+        "email": "test@example.com",
+        "name": "Test User"
+    },
+    "payment_link": true,
+    "return_url": "https://nuvora.in"
+}

@@ -1,0 +1,7 @@
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+100   509  100   127  100   382    383   1153 --:--:-- --:--:-- --:--:--  1575
+{"session_id":"cks_0NXCkrNGB3oDNcbj7pEcJ","checkout_url":"https://checkout.dodopayments.com/session/cks_0NXCkrNGB3oDNcbj7pEcJ"}

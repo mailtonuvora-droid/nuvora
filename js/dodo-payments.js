@@ -2,7 +2,7 @@
 const DODO_CONFIG = {
     apiKey: 'irtDew7e00_ZgCFB.mrtfW5Jx7uqXm-mApM82TlPeYoqHnI9PCLoUOmta_7debTAe',
     productId: 'pdt_0NXAXk31D7GF7kqxdwf3Z',
-    apiBaseUrl: 'https://live.dodopayments.com'
+    apiBaseUrl: window.location.hostname === 'localhost' ? 'https://live.dodopayments.com' : '/api/dodo'
 };
 
 // Create Dodo Payment Checkout
@@ -23,7 +23,7 @@ async function createDodoPaymentSession(orderData) {
                     quantity: 1
                 }
             ],
-            paymentAmount: amountInSmallestUnit, // Explicitly set amount (PWYW override)
+            payment_amount: amountInSmallestUnit, // Explicitly set amount (PWYW override)
             billing_address: {
                 country: 'IN'
             },

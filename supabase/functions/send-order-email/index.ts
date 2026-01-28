@@ -1,5 +1,5 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
-import { SmtpClient } from "https://deno.land/x/smtp@v0.7.0/mod.ts";
+import nodemailer from "npm:nodemailer";
 
 const SMTP_USER = Deno.env.get("SMTP_USER");
 const SMTP_PASS = Deno.env.get("SMTP_PASS");
@@ -22,7 +22,6 @@ interface OrderPayload {
     created_at: string;
     status: string;
   };
-  old_record: null;
 }
 
 serve(async (req) => {
@@ -32,12 +31,18 @@ serve(async (req) => {
 
     console.log(`Processing order: ${order.id}`);
 
-    const client = new SmtpClient();
-    await client.connectTLS({
-      hostname: "smtp.gmail.com",
+    if (!SMTP_USER || !SMTP_PASS) {
+      throw new Error("SMTP_USER or SMTP_PASS not set in Edge Function Secrets");
+    }
+
+    const transporter = nodemailer.createTransport({
+      host: "smtp.gmail.com",
       port: 465,
-      username: SMTP_USER!,
-      password: SMTP_PASS!,
+      secure: true, // Use SSL
+      auth: {
+        user: SMTP_USER,
+        pass: SMTP_PASS,
+      },
     });
 
     const itemsList = order.items
@@ -61,25 +66,23 @@ ${order.shipping_address}
 Items:
 ------
 ${itemsList}
-
-View in Admin Panel: ${req.headers.get("origin") || "Nuvora Admin"}
     `;
 
-    await client.send({
-      from: SMTP_USER!,
+    await transporter.sendMail({
+      from: `"Nuvora Orders" <${SMTP_USER}>`,
       to: RECIPIENT_EMAIL,
       subject: `🔔 New Order Received: #${order.id}`,
-      content: emailBody,
+      text: emailBody,
     });
 
-    await client.close();
+    console.log(`✅ Email sent successfully for order ${order.id}`);
 
     return new Response(JSON.stringify({ success: true }), {
       headers: { "Content-Type": "application/json" },
       status: 200,
     });
   } catch (error) {
-    console.error("Error sending email:", error);
+    console.error("❌ Error sending email:", error);
     return new Response(JSON.stringify({ error: error.message }), {
       headers: { "Content-Type": "application/json" },
       status: 500,

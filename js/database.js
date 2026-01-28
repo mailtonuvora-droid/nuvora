@@ -90,7 +90,8 @@ window.DB = {
                     shipping_address: shippingAddress,
                     gst_amount: gstAmount,
                     platform_fee_amount: platformFeeAmount,
-                    status: 'pending'
+                    status: 'pending',
+                    payment_status: 'pending'
                 }])
                 .select()
                 .single();
@@ -195,6 +196,10 @@ window.DB = {
     async updateOrderStatus(orderId, status) {
         if (!window.supabaseClient) return { error: 'Supabase client not initialized' };
         return await window.supabaseClient.from('orders').update({ status }).eq('id', orderId);
+    },
+    async updateOrderPaymentStatus(orderId, payment_status) {
+        if (!window.supabaseClient) return { error: 'Supabase client not initialized' };
+        return await window.supabaseClient.from('orders').update({ payment_status }).eq('id', orderId);
     },
 
     async subscribeToStock(email, productId) {

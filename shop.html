@@ -12,6 +12,16 @@
         content="Browse our catalog of premium organic products: Raw Nendran Banana Powder, Moringa Powder, Ground Nut Raw, and Coconut Powder. 100% Homely & Natural."
         name="description">
 
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-PFZVHN4JNG"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-PFZVHN4JNG');
+    </script>
+
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -396,9 +406,9 @@
                         <h4 class="text-light mb-3">Shop Info</h4>
                         <a class="btn-link" href="">About Us</a>
                         <a class="btn-link" href="">Contact Us</a>
-                        <a class="btn-link" href="">Privacy Policy</a>
-                        <a class="btn-link" href="">Terms & Condition</a>
-                        <a class="btn-link" href="">Return Policy</a>
+                        <a class="btn-link" href="privacy.html">Privacy Policy</a>
+                        <a class="btn-link" href="terms.html">Terms & Condition</a>
+                        <a class="btn-link" href="refund.html">Return Policy</a>
                         <a class="btn-link" href="">FAQs & Help</a>
                     </div>
                 </div>
@@ -485,6 +495,7 @@
     <!-- Template Javascript -->
     <script src="js/main.js"></script>
     <script src="js/cart.js"></script>
+    <script src="js/wishlist.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="js/database.js"></script>
     <script src="js/auth.js?v=7"></script>
@@ -512,13 +523,19 @@
 
                 const actionButton = isOutOfStock
                     ? `<button onclick="openNotifyModal('${p.id}', '${p.name}')" class="btn border border-secondary rounded-pill px-3 text-danger"><i class="fa fa-bell me-2"></i>Notify</button>`
-                    : `<a href="javascript:void(0)" 
-                         id="add-btn-${p.id}"
-                         data-name="${p.name}" data-img="${p.img}" data-original-price="${p.original_price || 'null'}" data-free-shipping="${p.free_shipping}"
-                         onclick="Cart.add({id: '${p.id}', name: '${cartName}', price: ${initialPrice}, img: '${p.img}', original_price: ${p.original_price || 'null'}, free_shipping: ${p.free_shipping}})" 
-                         class="btn border border-secondary rounded-pill px-3 text-primary">
-                         <i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart
-                       </a>`;
+                    : `<div class="d-flex gap-2 justify-content-center">
+                         <a href="javascript:void(0)" 
+                            id="add-btn-${p.id}"
+                            data-name="${p.name}" data-img="${p.img}" data-original-price="${p.original_price || 'null'}" data-free-shipping="${p.free_shipping}"
+                            onclick="Cart.add({id: '${p.id}', name: '${cartName}', price: ${initialPrice}, img: '${p.img}', original_price: ${p.original_price || 'null'}, free_shipping: ${p.free_shipping}})" 
+                            class="btn btn-sm border border-secondary rounded-pill px-3 text-primary">
+                            <i class="fa fa-shopping-bag me-1 text-primary"></i> Add
+                         </a>
+                         <button onclick="Wishlist.toggle({id: '${p.id}', name: '${p.name}', price: ${initialPrice}, img: '${p.img}'})" 
+                                 class="btn btn-sm border border-secondary rounded-pill px-3 text-danger">
+                             <i class="fa fa-heart"></i>
+                         </button>
+                       </div>`;
 
                 // Variant Pills HTML
                 let variantHTML = '';

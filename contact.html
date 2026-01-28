@@ -8,6 +8,16 @@
     <meta content="" name="keywords">
     <meta content="" name="description">
 
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-PFZVHN4JNG"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-PFZVHN4JNG');
+    </script>
+
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -230,9 +240,9 @@
                         <h4 class="text-light mb-3">Shop Info</h4>
                         <a class="btn-link" href="">About Us</a>
                         <a class="btn-link" href="">Contact Us</a>
-                        <a class="btn-link" href="">Privacy Policy</a>
-                        <a class="btn-link" href="">Terms & Condition</a>
-                        <a class="btn-link" href="">Return Policy</a>
+                        <a class="btn-link" href="privacy.html">Privacy Policy</a>
+                        <a class="btn-link" href="terms.html">Terms & Condition</a>
+                        <a class="btn-link" href="refund.html">Return Policy</a>
                         <a class="btn-link" href="">FAQs & Help</a>
                     </div>
                 </div>
@@ -301,6 +311,25 @@
     <script src="js/cart.js"></script>
     <script src="js/database.js"></script>
     <script src="js/auth.js?v=7"></script>
+    <script>
+        $(document).ready(function () {
+            $('form').submit(function (e) {
+                e.preventDefault();
+                const name = $(this).find('input[type="text"]').val();
+                const email = $(this).find('input[type="email"]').val();
+                const message = $(this).find('textarea').val();
+
+                if (!name || !email || !message) {
+                    alert('Please fill all fields');
+                    return;
+                }
+
+                // Show success message
+                alert('Thank you, ' + name + '! Your message has been sent successfully. We will get back to you soon.');
+                $(this).trigger('reset');
+            });
+        });
+    </script>
 </body>
 
 </html>

@@ -920,18 +920,48 @@
         }
 
         async function checkAdmin() {
-            const email = $('#adminEmail').val();
+            const email = $('#adminEmail').val().trim().toLowerCase();
             const pass = $('#adminPass').val();
-            const validAdmins = ['mailtonuvora@gmail.com', 'saravanavenkatachalam@gmail.com'];
 
-            if (validAdmins.includes(email) && pass === 'admin123') {
-                sessionStorage.setItem('nuvora_admin', 'true'); $('#login-gate').hide(); $('body').show(); loadAdminData();
-            } else $('#loginErr').show();
+            // Strictly restrict to the user's requested email
+            const validAdmin = 'saravanavenkatachalam@gmail.com';
+
+            if (email === validAdmin && pass === 'admin123') {
+                sessionStorage.setItem('nuvora_admin', 'true');
+                $('#login-gate').hide();
+                $('body').show();
+                loadAdminData();
+            } else {
+                $('#loginErr').text('Access Denied: You do not have permission to access the Admin Panel.').show();
+            }
         }
 
         $(document).ready(() => {
-            if (sessionStorage.getItem('nuvora_admin') === 'true') { $('#login-gate').hide(); $('body').show(); loadAdminData(); }
-            else { $('body').show(); }
+            // Wait for Auth to init if needed
+            const checkAuth = setInterval(() => {
+                if (window.Auth && window.Auth.user) {
+                    clearInterval(checkAuth);
+                    if (window.Auth.user.email === 'saravanavenkatachalam@gmail.com') {
+                        sessionStorage.setItem('nuvora_admin', 'true');
+                        $('#login-gate').hide();
+                        $('body').show();
+                        loadAdminData();
+                    } else {
+                        // Not the admin user
+                        $('body').show();
+                    }
+                } else if (document.readyState === 'complete') {
+                    // No user logged in yet, show gate
+                    clearInterval(checkAuth);
+                    if (sessionStorage.getItem('nuvora_admin') === 'true') {
+                        $('#login-gate').hide();
+                        $('body').show();
+                        loadAdminData();
+                    } else {
+                        $('body').show();
+                    }
+                }
+            }, 100);
         });
     </script>
 </body>

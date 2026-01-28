@@ -101,11 +101,21 @@ const Auth = {
         const userIconContainer = document.getElementById('user-nav-link');
         if (!userIconContainer) return;
 
+        // Global hiding of admin links - hide by default, show only if admin
+        const adminElements = document.querySelectorAll('.admin-only');
+        const isCurrentlyAdmin = this.isAuthenticated() && this.user.email === 'saravanavenkatachalam@gmail.com';
+
+        adminElements.forEach(el => {
+            el.style.setProperty('display', isCurrentlyAdmin ? 'block' : 'none', 'important');
+        });
+
         if (this.isAuthenticated()) {
             // Check for Admin
-            const isAdmin = ['mailtonuvora@gmail.com', 'saravanavenkatachalam@gmail.com'].includes(this.user.email);
+            const isAdmin = this.user.email === 'saravanavenkatachalam@gmail.com';
             if (isAdmin) {
                 sessionStorage.setItem('nuvora_admin', 'true');
+            } else {
+                sessionStorage.removeItem('nuvora_admin'); // Ensure non-admins don't have this set
             }
 
             // Change Icon Link to Dropdown or Account Page
@@ -133,6 +143,7 @@ const Auth = {
                     <i class="fas fa-user fa-2x"></i>
                 </a>
             `;
+            sessionStorage.removeItem('nuvora_admin');
         }
     },
 

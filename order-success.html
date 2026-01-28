@@ -103,15 +103,15 @@
                     // Clear session storage
                     sessionStorage.removeItem('completed_order');
 
-                    // Display order details
+                    // Display order details (For COD if it's ever enabled again, but usually now it will be online)
                     document.getElementById('order-details').innerHTML = `
                         <p class="fw-bold">Order ID: #${id ? id.slice(0, 8) : orderId || 'Processing'}</p>
-                        <p class="small text-muted">Payment Method: <strong>Cash on Delivery (COD)</strong></p>
+                        <p class="small text-muted">Payment Status: <strong class="text-warning">Pending (COD)</strong></p>
                         <p class="small text-muted">Total Amount: <strong>₹${total ? total.toFixed(2) : '0.00'}</strong></p>
                         <p class="small text-success mt-3">✓ Order confirmed! Pay when you receive your items.</p>
                     `;
                 } else {
-                    // Handle payment gateway orders (future implementation)
+                    // Handle payment gateway orders
                     const pendingOrderData = sessionStorage.getItem('pending_order');
 
                     if (pendingOrderData) {
@@ -123,6 +123,11 @@
                             for (const item of cart) {
                                 await window.DB.decrementProductStock(item.id, item.quantity);
                             }
+
+                            // Update payment status to 'paid' in DB
+                            if (id) {
+                                await window.supabaseClient.from('orders').update({ payment_status: 'paid' }).eq('id', id);
+                            }
                         }
 
                         // Clear cart and pending order
@@ -132,7 +137,7 @@
                         // Display order details
                         document.getElementById('order-details').innerHTML = `
                             <p class="fw-bold">Order ID: #${id ? id.slice(0, 8) : orderId || 'Processing'}</p>
-                            <p class="small text-muted">Payment Status: <strong>Paid</strong></p>
+                            <p class="small text-muted">Payment Status: <strong class="text-success">Paid</strong></p>
                             <p class="small text-success mt-3">✓ Payment confirmed! Your order is being processed.</p>
                         `;
                     } else {

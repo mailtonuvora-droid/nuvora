@@ -418,9 +418,10 @@
                         <!-- Payment Method Selection -->
                         <div class="mt-4 p-4 bg-light rounded-3">
                             <h6 class="fw-bold mb-3">💳 Select Payment Method</h6>
-                            <div class="form-check mb-3 p-3 border rounded" style="background: white;">
+                            <!-- Cash on Delivery (Paused) -->
+                            <div class="form-check mb-3 p-3 border rounded d-none" style="background: white;">
                                 <input class="form-check-input" type="radio" name="paymentMethod" id="paymentCOD"
-                                    value="cod" checked>
+                                    value="cod">
                                 <label class="form-check-label w-100" for="paymentCOD" style="cursor: pointer;">
                                     <div class="d-flex align-items-center">
                                         <div>
@@ -433,7 +434,7 @@
                             </div>
                             <div class="form-check p-3 border rounded" style="background: white;">
                                 <input class="form-check-input" type="radio" name="paymentMethod" id="paymentOnline"
-                                    value="online">
+                                    value="online" checked>
                                 <label class="form-check-label w-100" for="paymentOnline" style="cursor: pointer;">
                                     <div class="d-flex align-items-center">
                                         <div>
